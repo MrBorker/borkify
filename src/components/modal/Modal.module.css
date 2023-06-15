@@ -50,29 +50,25 @@
   font-size: 24px;
   margin-bottom: 20px;
   color: var(--color-gray-700);
-  border: solid 2px var(--color-gray-600);
+  border: 2px solid var(--color-gray-600);
   border-radius: 10px;
   padding: 10px 20px;
 }
 
-.input:focus {
-  border: solid 2px var(--color-mint);
-}
-
 .password {
-  margin-bottom: 50px;
+  margin-bottom: 40px;
 }
 
-.error {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 10px;
+.message {
+  padding: 10px 20px;
   margin-bottom: 20px;
   font-weight: 400;
   font-size: 24px;
-  border: solid 2px var(--color-fucsia);
-  color: var(--color-fucsia);
-  border-radius: 10px;
+  text-align: center;
+}
+
+.forget-password-btn {
+  font-size: 16px;
+  font-weight: 400;
+  margin-top: 16px;
 }

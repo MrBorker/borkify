@@ -1,5 +1,5 @@
 import styles from "./Modal.module.css";
-import { Button } from "../";
+import { Button, Message } from "../";
 import { useRef, useState } from "react";
 import { useAuth } from "../../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
@@ -9,26 +9,41 @@ function Modal({ setIsModalOn, isNewUser }) {
     setIsModalOn(0);
   };
 
+  const { signIn, signUp, sendPassword } = useAuth();
+  const history = useNavigate();
+  const [resetPassword, setResetPassword] = useState(false);
+  const [error, setError] = useState("");
+  const [message, setMessage] = useState("");
   const emailRef = useRef();
   const passwordRef = useRef();
-  const { signIn, signUp, currentUser } = useAuth();
-  const [error, setError] = useState("");
-  const history = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
     try {
-      console.log(isNewUser);
       isNewUser
         ? await signUp(emailRef.current.value, passwordRef.current.value)
         : await signIn(emailRef.current.value, passwordRef.current.value);
-      console.log(currentUser);
       history("/admin");
     } catch (err) {
       setError(err.code);
-      console.log(err);
     }
+  };
+
+  const handleResetPassword = async (e) => {
+    e.preventDefault();
+    setError("");
+    try {
+      await sendPassword(emailRef.current.value);
+      setMessage("The message was sent. Check your email!");
+    } catch (err) {
+      setError(err.code);
+    }
+  };
+
+  const showResetPassword = () => {
+    setResetPassword(true);
+    setError("");
   };
 
   return (
@@ -49,26 +64,47 @@ function Modal({ setIsModalOn, isNewUser }) {
           </svg>
         </button>
         <h2 className={styles["title"]}>
-          {isNewUser ? "Create an account" : "Sign in"}
+          {isNewUser
+            ? "Create an account"
+            : resetPassword
+            ? "Reset password"
+            : "Sign in"}
         </h2>
-        {error && <div className={styles["error"]}>{error}</div>}
-        <form action="" className={styles["form"]} onSubmit={handleSubmit}>
-          <input
-            type="text"
-            placeholder="Email"
-            ref={emailRef}
-            className={styles["input"]}
-            required
-          />
-          <input
-            type="text"
-            placeholder="Password"
-            ref={passwordRef}
-            className={`${styles["input"]} ${styles["password"]}`}
-            required
-          />
-          <Button color="mint" text="go!" />
-        </form>
+        {error && <Message text={error} type="error" />}
+        {message && <div className={styles["message"]}>{message}</div>}
+        {!message && (
+          <form action="" className={styles["form"]} onSubmit={handleSubmit}>
+            <input
+              type="text"
+              placeholder="Email"
+              ref={emailRef}
+              className={styles["input"]}
+              required
+            />
+            {!resetPassword && (
+              <input
+                type="password"
+                placeholder="Password"
+                ref={passwordRef}
+                className={`${styles["input"]} ${styles["password"]}`}
+                required
+              />
+            )}
+            {resetPassword ? (
+              <Button color="mint" text="send" onClick={handleResetPassword} />
+            ) : (
+              <Button color="mint" text="go!" />
+            )}
+          </form>
+        )}
+        {!isNewUser && !resetPassword && (
+          <button
+            className={styles["forget-password-btn"]}
+            onClick={showResetPassword}
+          >
+            Forgot password?
+          </button>
+        )}
       </div>
     </div>
   );

@@ -17,3 +17,11 @@
 .blue {
   background-color: var(--color-blue);
 }
+
+.rose {
+  background-color: var(--color-rose-200);
+}
+
+.gray {
+  background-color: var(--color-gray-600);
+}

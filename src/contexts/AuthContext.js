@@ -3,6 +3,12 @@ import { auth } from "../firebase";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  signOut,
+  sendPasswordResetEmail,
+  getAuth,
+  updateEmail,
+  updatePassword,
+  onAuthStateChanged,
 } from "firebase/auth";
 
 const AuthContext = React.createContext();
@@ -23,15 +29,39 @@ function AuthProvider({ children }) {
     return signInWithEmailAndPassword(auth, email, password);
   }
 
+  function logOut() {
+    return signOut(auth);
+  }
+
+  function sendPassword(email) {
+    return sendPasswordResetEmail(auth, email);
+  }
+
+  function setNewEmail(email) {
+    return updateEmail(getAuth().currentUser, email);
+  }
+
+  function setNewPassword(password) {
+    return updatePassword(getAuth().currentUser, password);
+  }
+
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((user) => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
       setCurrentUser(user);
       setLoading(false);
     });
     return unsubscribe;
   }, []);
 
-  const value = { currentUser, signUp, signIn };
+  const value = {
+    currentUser,
+    signUp,
+    signIn,
+    logOut,
+    sendPassword,
+    setNewEmail,
+    setNewPassword,
+  };
 
   return (
     <AuthContext.Provider value={value}>

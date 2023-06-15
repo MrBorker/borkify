@@ -7,12 +7,20 @@
   --color-orange: #fb4d3d;
   --color-fucsia: #e40066;
   --color-blue: #345995;
+  --color-rose-500: #6c464f;
+  --color-rose-400: #ffcfdc;
+  --color-rose-300: #9f2323;
+  --color-rose-200: #f85961;
+  --color-rose-100: #fff4f7;
   --color-white: #ffffff;
   --color-gray-1000: #373737;
   --color-gray-900: #6b6b6b;
   --color-gray-800: #888888b8;
   --color-gray-700: #7c7c7c;
   --color-gray-600: #bcbcbc;
+  --color-gray-500: #4a4a4a;
+  --color-gray-400: #313131;
+  --color-black-shadow: #00000014;
 }
 
 html {
@@ -26,8 +34,14 @@ h2,
 h3,
 h4,
 h5,
-h6 {
+h6,
+ul {
   margin: 0;
+}
+
+ul {
+  padding: 0;
+  list-style-type: none;
 }
 
 *,
@@ -36,11 +50,27 @@ h6 {
   box-sizing: inherit;
 }
 
+fieldset {
+  margin: 0;
+  padding: 0;
+  border: none;
+  margin-inline-start: 0;
+  margin-inline-end: 0;
+  padding-block-start: 0;
+  padding-inline-start: 0;
+  padding-inline-end: 0;
+  padding-block-end: 0;
+}
+
 button {
   font-family: "Quicksand", sans-serif;
   border: none;
   background-color: transparent;
+  cursor: pointer;
 }
 
-.root {
+input,
+textarea {
+  outline: none;
+  font-family: "Quicksand", sans-serif;
 }
