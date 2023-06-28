@@ -17,8 +17,9 @@ function Profile() {
   const [avatarLoaded, setAvatarLoaded] = useState();
   const [avatarBeforeLoading, setAvatarBeforeLoading] = useState();
   const [name, setName] = useState("");
-  const [city, setCity] = useState("");
+  const [location, setLocation] = useState("");
   const [breed, setBreed] = useState("");
+  const [age, setAge] = useState("");
   const [gender, setGender] = useState("");
   const [about, setAbout] = useState("");
 
@@ -52,8 +53,9 @@ function Profile() {
       await updateUserData({
         userId: currentUser.uid,
         userName: name,
-        city: city,
+        location: location,
         breed: breed,
+        age: age,
         gender: gender,
         about: about,
       });
@@ -70,16 +72,15 @@ function Profile() {
     readUserData({ userId: currentUser.uid })
       .then((userData) => {
         setName(userData.val().userName);
-        setCity(userData.val().city);
+        setLocation(userData.val().location);
         setBreed(userData.val().breed);
+        setAge(userData.val().age);
         setGender(userData.val().gender);
         setAbout(userData.val().about);
         setAvatarLoaded(userData.val().avatarUrl);
       })
       .catch((error) => console.log(error));
   }, [readUserData, currentUser.uid]);
-
-  // setAvatarLoaded();
 
   return (
     <div className={styles["root"]}>
@@ -123,12 +124,12 @@ function Profile() {
           onChange={(event) => setName(event.target.value)}
         />
         <InputRow
-          htmlFor="city"
+          htmlFor="location"
           type="text"
-          id="city"
-          labelText="city"
-          value={city}
-          onChange={(event) => setCity(event.target.value)}
+          id="location"
+          labelText="location"
+          value={location}
+          onChange={(event) => setLocation(event.target.value)}
         />
         <fieldset className={styles["row"]}>
           <label htmlFor="breed">breed</label>
@@ -145,6 +146,14 @@ function Profile() {
             ))}
           </datalist>
         </fieldset>
+        <InputRow
+          htmlFor="age"
+          type="text"
+          id="age"
+          labelText="age"
+          value={age}
+          onChange={(event) => setAge(event.target.value)}
+        />
         <fieldset className={styles["row"]}>
           <span>gender</span>
           <div className={styles["gender"]}>

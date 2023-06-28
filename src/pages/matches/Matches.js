@@ -1,4 +1,4 @@
-import styles from "./Matches.module";
+import styles from "./Matches.module.css";
 
 function Matches() {
   return <div>I'm matches</div>;

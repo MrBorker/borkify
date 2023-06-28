@@ -1,15 +1,18 @@
 .root {
   width: 100%;
+  max-width: 1284px;
   height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
+  margin: 0 auto;
 }
 
 .sidebar {
 }
 
 .list {
+  width: 250px;
 }
 
 .link {
@@ -45,7 +48,8 @@
 }
 
 .content {
-  width: 60%;
+  width: 100%;
+  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;

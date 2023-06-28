@@ -7,7 +7,7 @@
 }
 
 .row label,
-span {
+.row span {
   text-transform: uppercase;
   color: var(--color-rose-300);
   font-size: 12px;

@@ -7,6 +7,8 @@
   --color-orange: #fb4d3d;
   --color-fucsia: #e40066;
   --color-blue: #345995;
+  --color-rose-700: #ffe0e8;
+  --color-rose-600: #e6bac6;
   --color-rose-500: #6c464f;
   --color-rose-400: #ffcfdc;
   --color-rose-300: #9f2323;
@@ -20,6 +22,7 @@
   --color-gray-600: #bcbcbc;
   --color-gray-500: #4a4a4a;
   --color-gray-400: #313131;
+  --color-gray-300: #848484;
   --color-black-shadow: #00000014;
 }
 
@@ -35,7 +38,8 @@ h3,
 h4,
 h5,
 h6,
-ul {
+ul,
+p {
   margin: 0;
 }
 
@@ -67,10 +71,13 @@ button {
   border: none;
   background-color: transparent;
   cursor: pointer;
+  margin: 0;
+  padding: 0;
 }
 
 input,
 textarea {
   outline: none;
   font-family: "Quicksand", sans-serif;
+  border: 0;
 }
