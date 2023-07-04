@@ -5,17 +5,20 @@ import { useAuth } from "../../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 
 function Modal({ setIsModalOn, isNewUser }) {
-  const handleClose = () => {
-    setIsModalOn(0);
-  };
-
   const { signIn, signUp, sendPassword } = useAuth();
+
   const history = useNavigate();
+
   const [resetPassword, setResetPassword] = useState(false);
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
+
   const emailRef = useRef();
   const passwordRef = useRef();
+
+  const handleClose = () => {
+    setIsModalOn(0);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();

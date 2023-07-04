@@ -1,8 +1,15 @@
+import { useEffect, useRef } from "react";
 import styles from "./ChatMessage.module.css";
 
 function ChatMessage({ type, text, time }) {
+  const ref = useRef();
+
+  useEffect(() => {
+    ref.current?.scrollIntoView({ behavior: "smooth" });
+  }, [text]);
+
   return (
-    <div className={`${styles["message"]} ${styles[type]}`}>
+    <div className={`${styles["message"]} ${styles[type]}`} ref={ref}>
       <div className={styles["wrapper"]}>
         <p className={styles["text"]}>{text}</p>
         <button className={styles["edit-btn"]}>

@@ -7,15 +7,21 @@ import { useState, useEffect } from "react";
 import { storage } from "../../firebase";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
+import { updateDoc, setDoc, getDoc, doc } from "firebase/firestore";
+import { firestore } from "../../firebase";
+
 function Profile() {
   const avatarDefault = "./assets/png/default-avatar.png";
+
   const { currentUser } = useAuth();
-  const { updateUserData, readUserData } = useDatabase();
+
   const [error, setError] = useState();
   const [message, setMessage] = useState();
+
   const [avatarToLoad, setAvatarToLoad] = useState(null);
   const [avatarLoaded, setAvatarLoaded] = useState();
   const [avatarBeforeLoading, setAvatarBeforeLoading] = useState();
+
   const [name, setName] = useState("");
   const [location, setLocation] = useState("");
   const [breed, setBreed] = useState("");
@@ -39,18 +45,23 @@ function Profile() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    setMessage("");
     try {
       if (avatarToLoad) {
+        // Load avatar to firebase storage
         await uploadBytes(
           ref(storage, `avatars/${currentUser.uid}`),
           avatarToLoad
         );
-        const avatarUrl = await getDownloadURL(
-          ref(storage, `avatars/${currentUser.uid}`)
-        );
-        await updateUserData({ userId: currentUser.uid, avatarUrl: avatarUrl });
       }
-      await updateUserData({
+
+      // Get avatar link in a storage
+      const avatarUrl =
+        (await getDownloadURL(ref(storage, `avatars/${currentUser.uid}`))) ||
+        "";
+
+      // Add form data to database
+      await setDoc(doc(firestore, "users", currentUser.uid), {
         userId: currentUser.uid,
         userName: name,
         location: location,
@@ -58,7 +69,9 @@ function Profile() {
         age: age,
         gender: gender,
         about: about,
+        avatarUrl: avatarUrl,
       });
+
       setMessage("You data has been sucessfully saved");
     } catch (err) {
       console.log(err);
@@ -67,20 +80,21 @@ function Profile() {
 
   // переместить на общий уровень загрузку данных + поместить их в хранилище
 
+  // Get data from database and fill the form with saved values
   useEffect(() => {
     if (!currentUser.uid) return;
-    readUserData({ userId: currentUser.uid })
-      .then((userData) => {
-        setName(userData.val().userName);
-        setLocation(userData.val().location);
-        setBreed(userData.val().breed);
-        setAge(userData.val().age);
-        setGender(userData.val().gender);
-        setAbout(userData.val().about);
-        setAvatarLoaded(userData.val().avatarUrl);
+    getDoc(doc(firestore, "users", currentUser.uid))
+      .then((response) => {
+        setName(response.data().userName);
+        setLocation(response.data().location);
+        setBreed(response.data().breed);
+        setAge(response.data().age);
+        setGender(response.data().gender);
+        setAbout(response.data().about);
+        setAvatarLoaded(response.data().avatarUrl);
       })
       .catch((error) => console.log(error));
-  }, [readUserData, currentUser.uid]);
+  }, [currentUser.uid]);
 
   return (
     <div className={styles["root"]}>
@@ -160,23 +174,23 @@ function Profile() {
             <input
               className={styles["radio"]}
               type="radio"
-              id="male"
-              value="male"
+              id="Male"
+              value="Male"
               name="gender"
-              checked={gender === "male"}
+              checked={gender === "Male"}
               onChange={(event) => setGender(event.target.value)}
             />
-            <label htmlFor="male">mr. Woof</label>
+            <label htmlFor="Male">mr. Woof</label>
             <input
               className={styles["radio"]}
               type="radio"
-              id="female"
-              value="female"
+              id="Female"
+              value="Female"
               name="gender"
-              checked={gender === "female"}
+              checked={gender === "Female"}
               onChange={(event) => setGender(event.target.value)}
             />
-            <label htmlFor="female">ms. Woof</label>
+            <label htmlFor="Female">ms. Woof</label>
           </div>
         </fieldset>
         <InputRow

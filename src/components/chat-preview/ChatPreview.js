@@ -1,8 +1,8 @@
 import styles from "./ChatPreview.module.css";
 
-function ChatPreview({ title, message, avatar, unread }) {
+function ChatPreview({ onClick, title, message, avatar, unread }) {
   return (
-    <button className={styles["select-btn"]}>
+    <button className={styles["select-btn"]} onClick={onClick}>
       <div className={styles["avatar"]}>
         <img src={avatar} alt="" className={styles["avatar-img"]} />
       </div>

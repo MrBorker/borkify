@@ -6,3 +6,4 @@ export { InputRow } from "./input-row";
 export { Message } from "./message";
 export { ChatPreview } from "./chat-preview";
 export { ChatMessage } from "./chat-message";
+export { SwipeBtn } from "./swipe-btn";
