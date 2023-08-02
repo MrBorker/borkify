@@ -15,6 +15,7 @@
   background-color: var(--color-rose-700);
   border-radius: 20px 0 20px 20px;
   align-self: flex-end;
+  margin-right: 15px;
 }
 
 .wrapper {

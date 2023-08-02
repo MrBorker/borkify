@@ -1,6 +1,5 @@
 import styles from "./Matches.module.css";
 import { SwipeBtn } from "../../components";
-import { useAuth } from "../../contexts/AuthContext";
 import { firestore } from "../../firebase";
 import {
   setDoc,
@@ -13,11 +12,14 @@ import {
 } from "firebase/firestore";
 import { useEffect, useState } from "react";
 
-function Matches() {
-  const { currentUser } = useAuth();
+import { useSelector } from "react-redux";
+import { selectUserInfo } from "../../redux/selects";
 
+function Matches() {
   const [usersArray, setUsersArray] = useState([]);
   const [usersCounter, setUsersCounter] = useState(0);
+
+  const userInfo = useSelector(selectUserInfo);
 
   // I should do a query to firebase to have info about user a) to fill a block b) to handle click aka pick uid and create a new chat
 
@@ -25,19 +27,19 @@ function Matches() {
     // Add current user to chats
     // Create a new entry in database userChats uid + uid
     const combinedId =
-      currentUser.uid < usersArray[usersCounter]?.userId
-        ? currentUser.uid + usersArray[usersCounter]?.userId
-        : usersArray[usersCounter]?.userId + currentUser.uid;
+      userInfo.userId < usersArray[usersCounter]?.userId
+        ? userInfo.userId + usersArray[usersCounter]?.userId
+        : usersArray[usersCounter]?.userId + userInfo.userId;
     try {
       await setDoc(doc(firestore, "chats", combinedId), {
         messages: [],
       });
       await setDoc(
-        doc(firestore, "userChats", currentUser.uid),
+        doc(firestore, "userChats", userInfo.userId),
         {
           [combinedId]: {
             userInfo: {
-              uid: usersArray[usersCounter]?.userId,
+              userId: usersArray[usersCounter]?.userId,
               displayName: usersArray[usersCounter]?.userName,
               photoUrl: usersArray[usersCounter]?.avatarUrl,
             },
@@ -51,9 +53,9 @@ function Matches() {
         {
           [combinedId]: {
             userInfo: {
-              uid: currentUser.uid,
-              displayName: usersArray[usersCounter]?.userName,
-              photoUrl: usersArray[usersCounter]?.avatarUrl,
+              userId: userInfo.userId,
+              displayName: userInfo.userName,
+              photoUrl: userInfo.avatarUrl,
             },
             date: serverTimestamp(),
           },
@@ -79,13 +81,14 @@ function Matches() {
     )
       .then((result) => {
         const array = [];
+        console.log(userInfo);
         result.forEach((user) => {
-          if (user.data().userId !== currentUser.uid) array.push(user.data());
+          if (user.data().userId !== userInfo.userId) array.push(user.data());
         });
         setUsersArray(array);
       })
       .catch((error) => console.log(error));
-  }, []);
+  }, [userInfo]);
 
   return (
     <div className={styles["root"]}>

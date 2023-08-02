@@ -1,5 +1,11 @@
+import { selectChat } from "../../redux/chatSlice";
+import { useDispatch, useSelector } from "react-redux";
+
 import styles from "./Chats.module.css";
+import { getFormatedDate } from "../../helpers/getFormatedDate";
+
 import { ChatPreview, ChatMessage } from "../../components";
+
 import {
   serverTimestamp,
   onSnapshot,
@@ -8,55 +14,33 @@ import {
   arrayUnion,
   Timestamp,
 } from "firebase/firestore";
+
 import { firestore } from "../../firebase";
 import { useEffect, useState } from "react";
-import { useAuth } from "../../contexts/AuthContext";
-import { useChat } from "../../contexts/ChatContext";
 import { v4 as uuid } from "uuid";
 
-function Chats() {
-  const { currentUser } = useAuth();
-  const { dispatch, data } = useChat();
+import {
+  selectUserInfo,
+  selectCollaboratorInfo,
+  selectChatId,
+} from "../../redux/selects";
 
+function Chats() {
   const [chats, setChats] = useState([]);
+  const [messages, setMessages] = useState([]);
   const [isSelected, setIsSelected] = useState(false);
   const [newMessage, setNewMessage] = useState("");
-  const [messages, setMessages] = useState([]);
 
-  const handleSelect = (user) => {
-    dispatch({ type: "CHANGE_USER", payload: user });
-    setIsSelected(true);
-  };
+  const userInfo = useSelector(selectUserInfo);
+  const collaboratorInfo = useSelector(selectCollaboratorInfo);
+  const chatId = useSelector(selectChatId);
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    if (!newMessage) return;
-    try {
-      await updateDoc(doc(firestore, "chats", data.chatId), {
-        messages: arrayUnion({
-          id: uuid(),
-          text: newMessage,
-          senderId: currentUser.uid,
-          date: Timestamp.now(),
-        }),
-      });
-      await updateDoc(doc(firestore, "userChats", currentUser.uid), {
-        [data.chatId + ".lastMessage"]: {
-          text: newMessage,
-        },
-        [data.chatId + ".date"]: serverTimestamp(),
-      });
-      //  !! update for the other user to implement
-      setNewMessage("");
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const getChats = () => {
       const unsubscribe = onSnapshot(
-        doc(firestore, "userChats", currentUser.uid),
+        doc(firestore, "userChats", userInfo.userId),
         (doc) => {
           setChats(doc.data());
         }
@@ -66,24 +50,56 @@ function Chats() {
       };
     };
 
-    currentUser.uid && getChats();
-  }, [currentUser.uid]);
+    userInfo.userId && getChats();
+  }, [userInfo.userId]);
+
+  const handleSelect = (user, chatId) => {
+    userInfo && dispatch(selectChat({ collaboratorInfo: user, chatId }));
+    setIsSelected(true);
+  };
 
   useEffect(() => {
     const getMessages = () => {
-      const unsubscribe = onSnapshot(
-        doc(firestore, "chats", data.chatId),
-        (doc) => {
-          doc.exists() && setMessages(doc.data().messages);
-        }
-      );
+      const unsubscribe = onSnapshot(doc(firestore, "chats", chatId), (doc) => {
+        doc.exists() && setMessages(doc.data().messages);
+      });
       return () => {
         unsubscribe();
       };
     };
 
-    data.chatId && getMessages();
-  }, [data.chatId]);
+    chatId && getMessages();
+  }, [chatId]);
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    if (!newMessage) return;
+    try {
+      await updateDoc(doc(firestore, "chats", chatId), {
+        messages: arrayUnion({
+          id: uuid(),
+          text: newMessage,
+          senderId: userInfo.userId,
+          date: Timestamp.now(),
+        }),
+      });
+      await updateDoc(doc(firestore, "userChats", userInfo.userId), {
+        [chatId + ".lastMessage"]: {
+          text: newMessage,
+        },
+        [chatId + ".date"]: serverTimestamp(),
+      });
+      await updateDoc(doc(firestore, "userChats", collaboratorInfo.userId), {
+        [chatId + ".lastMessage"]: {
+          text: newMessage,
+        },
+        [chatId + ".date"]: serverTimestamp(),
+      });
+      setNewMessage("");
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div className={styles["root"]}>
@@ -97,7 +113,7 @@ function Chats() {
         {isSelected && (
           <div className={styles["avatar"]}>
             <img
-              src={data.user?.photoUrl}
+              src={collaboratorInfo.photoUrl}
               alt=""
               className={styles["avatar-img"]}
             />
@@ -105,47 +121,39 @@ function Chats() {
         )}
         {isSelected && (
           <div className={styles["info"]}>
-            <h4 className={styles["title"]}>{data.user?.displayName}</h4>
+            <h4 className={styles["title"]}>{collaboratorInfo.displayName}</h4>
             <span className={styles["status"]}>Online</span>
           </div>
         )}
       </div>
 
       <div className={styles["preview"]}>
-        {Object.entries(chats)
-          ?.sort((a, b) => b.date - a.date)
-          .map((chat) => (
-            <ChatPreview
-              key={chat[0]}
-              onClick={() => handleSelect(chat[1].userInfo)}
-              title={chat[1].userInfo?.displayName}
-              message={chat[1].lastMessage?.text}
-              avatar={chat[1].userInfo?.photoUrl}
-              unread="true"
-            />
-          ))}
+        {chats &&
+          Object.entries(chats)
+            ?.sort((a, b) => b.date - a.date)
+            .map((chat) => (
+              <ChatPreview
+                key={chat[0]}
+                onClick={() => handleSelect(chat[1].userInfo, chat[0])}
+                title={chat[1].userInfo?.displayName}
+                message={chat[1].lastMessage?.text}
+                avatar={chat[1].userInfo?.photoUrl}
+                unread="true"
+              />
+            ))}
       </div>
       {isSelected && (
         <div className={styles["selected"]}>
           <div className={styles["chat"]}>
-            {/* <ChatMessage
-              type="in"
-              text="Hi, Bro! Wanna play with we and the gang in a park today?"
-              time="Yesterday 09:03"
-            />
-            <ChatMessage
-              type="out"
-              text="Hello! I’m on my way."
-              time="Yesterday 09:08"
-            /> */}
-            {messages.map((message) => (
-              <ChatMessage
-                key={message.id}
-                type={message.senderId === currentUser.uid ? "out" : "in"}
-                text={message.text}
-                time="Yesterday 09:08"
-              />
-            ))}
+            {messages &&
+              messages.map((message) => (
+                <ChatMessage
+                  key={message.id}
+                  type={message.senderId === userInfo.userId ? "out" : "in"}
+                  text={message.text}
+                  time={getFormatedDate(message.date.toDate())}
+                />
+              ))}
           </div>
           <form
             action=""

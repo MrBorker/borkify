@@ -89,6 +89,19 @@
   overflow-y: auto;
 }
 
+.chat::-webkit-scrollbar {
+  width: 15px;
+}
+
+.chat::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.chat::-webkit-scrollbar-thumb {
+  background: var(--color-rose-700);
+  border-radius: 20px;
+}
+
 .new-message-form {
   display: flex;
   position: relative;

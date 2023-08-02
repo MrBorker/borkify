@@ -1,25 +1,34 @@
 import styles from "./Profile.module.css";
 import { breeds } from "../../config";
+
 import { Button, InputRow, Message } from "../../components";
+
 import { useAuth } from "../../contexts/AuthContext";
-import { useDatabase } from "../../contexts/DatabaseContext";
 import { useState, useEffect } from "react";
+
 import { storage } from "../../firebase";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
-import { updateDoc, setDoc, getDoc, doc } from "firebase/firestore";
-import { firestore } from "../../firebase";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addUserInfoToFirestore,
+  fetchUserInfoFromFirestore,
+} from "../../redux/profileSlice";
+import { selectUserInfo } from "../../redux/selects";
 
 function Profile() {
   const avatarDefault = "./assets/png/default-avatar.png";
 
   const { currentUser } = useAuth();
 
+  const dispatch = useDispatch();
+  const userInfo = useSelector(selectUserInfo);
+
   const [error, setError] = useState();
   const [message, setMessage] = useState();
 
   const [avatarToLoad, setAvatarToLoad] = useState(null);
-  const [avatarLoaded, setAvatarLoaded] = useState();
+  const [avatarLoaded, setAvatarLoaded] = useState("");
   const [avatarBeforeLoading, setAvatarBeforeLoading] = useState();
 
   const [name, setName] = useState("");
@@ -60,17 +69,19 @@ function Profile() {
         (await getDownloadURL(ref(storage, `avatars/${currentUser.uid}`))) ||
         "";
 
-      // Add form data to database
-      await setDoc(doc(firestore, "users", currentUser.uid), {
-        userId: currentUser.uid,
-        userName: name,
-        location: location,
-        breed: breed,
-        age: age,
-        gender: gender,
-        about: about,
-        avatarUrl: avatarUrl,
-      });
+      // Add form data to database throw redux toolkit
+      dispatch(
+        addUserInfoToFirestore({
+          userId: currentUser.uid,
+          userName: name,
+          location: location,
+          breed: breed,
+          age: age,
+          gender: gender,
+          about: about,
+          avatarUrl: avatarUrl,
+        })
+      );
 
       setMessage("You data has been sucessfully saved");
     } catch (err) {
@@ -82,19 +93,14 @@ function Profile() {
 
   // Get data from database and fill the form with saved values
   useEffect(() => {
-    if (!currentUser.uid) return;
-    getDoc(doc(firestore, "users", currentUser.uid))
-      .then((response) => {
-        setName(response.data().userName);
-        setLocation(response.data().location);
-        setBreed(response.data().breed);
-        setAge(response.data().age);
-        setGender(response.data().gender);
-        setAbout(response.data().about);
-        setAvatarLoaded(response.data().avatarUrl);
-      })
-      .catch((error) => console.log(error));
-  }, [currentUser.uid]);
+    setName(userInfo?.userName);
+    setLocation(userInfo?.location);
+    setBreed(userInfo?.breed);
+    setAge(userInfo?.age);
+    setGender(userInfo?.gender);
+    setAbout(userInfo?.about);
+    setAvatarLoaded(userInfo?.avatarUrl);
+  }, [userInfo]);
 
   return (
     <div className={styles["root"]}>
@@ -134,7 +140,7 @@ function Profile() {
           type="text"
           id="name"
           labelText="name"
-          value={name}
+          value={name || ""}
           onChange={(event) => setName(event.target.value)}
         />
         <InputRow
@@ -142,7 +148,7 @@ function Profile() {
           type="text"
           id="location"
           labelText="location"
-          value={location}
+          value={location || ""}
           onChange={(event) => setLocation(event.target.value)}
         />
         <fieldset className={styles["row"]}>
@@ -151,7 +157,7 @@ function Profile() {
             type="text"
             list="list"
             id="breed"
-            value={breed}
+            value={breed || ""}
             onChange={(event) => setBreed(event.target.value)}
           />
           <datalist id="list">
@@ -165,7 +171,7 @@ function Profile() {
           type="text"
           id="age"
           labelText="age"
-          value={age}
+          value={age || ""}
           onChange={(event) => setAge(event.target.value)}
         />
         <fieldset className={styles["row"]}>
@@ -198,7 +204,7 @@ function Profile() {
           type="textarea"
           id="about"
           labelText="about"
-          value={about}
+          value={about || ""}
           onChange={(event) => setAbout(event.target.value)}
         />
         <Button color="rose" text="save" onClick={handleSubmit} />
