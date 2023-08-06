@@ -1,9 +1,4 @@
 .root {
-}
-
-/* PRESENTATION *********** */
-
-.presentation {
   display: flex;
   margin: 0px 30px 0 20px;
   justify-content: space-between;

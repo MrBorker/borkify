@@ -10,11 +10,8 @@ import { storage } from "../../firebase";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 import { useDispatch, useSelector } from "react-redux";
-import {
-  addUserInfoToFirestore,
-  fetchUserInfoFromFirestore,
-} from "../../redux/profileSlice";
 import { selectUserInfo } from "../../redux/selects";
+import { addUserInfoToFirestore } from "../../redux/profileSlice";
 
 function Profile() {
   const avatarDefault = "./assets/png/default-avatar.png";

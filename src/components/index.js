@@ -7,3 +7,6 @@ export { Message } from "./message";
 export { ChatPreview } from "./chat-preview";
 export { ChatMessage } from "./chat-message";
 export { SwipeBtn } from "./swipe-btn";
+export { Presentation } from "./presentation";
+export { Filter } from "./filter";
+export { FilterRange } from "./filter-range";

@@ -1,0 +1,48 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
+}
+
+.header {
+  color: var(--color-rose-200);
+  font-size: 56px;
+  font-weight: 600;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
+  width: 100%;
+}
+
+.form:focus {
+  border: none;
+}
+
+.gender {
+  display: flex;
+  gap: 20px;
+}
+
+.gender-btn {
+  font-size: 24px;
+  width: 140px;
+  padding: 10px 0;
+  font-weight: 600;
+  color: var(--color-gray-600);
+  border: solid 2px var(--color-gray-600);
+  border-radius: 20px;
+}
+
+.gender-btn:hover {
+  border: solid 2px var(--color-rose-800);
+  color: var(--color-rose-800);
+}
+
+.active {
+  border: solid 2px var(--color-rose-800);
+  color: var(--color-rose-800);
+}
