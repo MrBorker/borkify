@@ -1,0 +1,117 @@
+.root {
+  width: 95%;
+  max-width: 650px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.avatar {
+  height: 180px;
+  width: 180px;
+  border: 14px solid var(--color-rose-400);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  margin-bottom: 30px;
+}
+
+.avatar-img {
+  object-fit: cover;
+  height: 130px;
+  width: 130px;
+  border-radius: 50%;
+}
+
+.avatar-input {
+  display: none;
+}
+
+.avatar-label {
+  position: absolute;
+  top: 0;
+  right: -15px;
+  cursor: pointer;
+  background-color: var(--color-white);
+  border-radius: 50%;
+  padding: 5px;
+  box-shadow: 0px 4px 4px 0px var(--color-black-shadow);
+}
+
+.row {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 30px;
+}
+
+.row label,
+.row span {
+  text-transform: uppercase;
+  color: var(--color-rose-300);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.row input[type="text"],
+.row textarea {
+  border: none;
+  border-bottom: 3px solid var(--color-rose-200);
+  background-color: var(--color-rose-100);
+  color: var(--color-gray-400);
+  font-size: 20px;
+  font-weight: 600;
+  padding: 10px 20px 10px 20px;
+  resize: none;
+}
+
+.gender {
+  display: flex;
+  align-items: center;
+  margin-top: 15px;
+}
+
+.gender label {
+  color: var(--color-gray-400);
+  text-transform: none;
+  font-size: 16px;
+  margin-right: 20px;
+}
+
+.radio {
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--color-rose-200);
+  background-color: var(--color-white);
+  border-radius: 50%;
+  display: grid;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  margin: 0 10px 0 0;
+}
+
+.radio::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  transform: scale(0);
+  transition: 0.3s transform ease-in-out;
+  box-shadow: inset 8px 8px var(--color-rose-200);
+}
+
+.radio:checked {
+  background: var(--color-white);
+}
+
+.radio:checked::before {
+  transform: scale(1);
+}

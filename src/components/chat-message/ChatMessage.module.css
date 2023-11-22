@@ -1,0 +1,38 @@
+.message {
+  width: fit-content;
+  padding: 15px;
+  margin-bottom: 30px;
+  display: flex;
+  flex-direction: column;
+}
+
+.in {
+  background-color: var(--color-rose-600);
+  border-radius: 0 20px 20px 20px;
+}
+
+.out {
+  background-color: var(--color-rose-700);
+  border-radius: 20px 0 20px 20px;
+  align-self: flex-end;
+  margin-right: 15px;
+}
+
+.wrapper {
+  display: flex;
+  margin-bottom: 10px;
+}
+
+.text {
+  color: var(--color-gray-400);
+  font-weight: 600;
+  font-size: 18px;
+  margin-right: 30px;
+}
+
+.time {
+  color: var(--color-gray-300);
+  font-weight: 500;
+  font-size: 14px;
+  align-self: flex-end;
+}

@@ -1,0 +1,33 @@
+.row {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 30px;
+  position: relative;
+}
+
+.row label,
+.row span {
+  text-transform: uppercase;
+  color: var(--color-rose-300);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.row input,
+.row textarea {
+  border: none;
+  border-bottom: 3px solid var(--color-rose-200);
+  background-color: var(--color-rose-100);
+  color: var(--color-gray-400);
+  font-size: 20px;
+  font-weight: 600;
+  padding: 10px 20px 10px 20px;
+  resize: none;
+}
+
+.password-icon {
+  position: absolute;
+  right: 20px;
+  bottom: 10px;
+}

@@ -1,0 +1,27 @@
+.btn {
+  text-transform: uppercase;
+  color: var(--color-white);
+  font-weight: 700;
+  font-size: 24px;
+  padding: 11px 0;
+  border-radius: 10px;
+  width: 185px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.mint {
+  background-color: var(--color-mint);
+}
+
+.blue {
+  background-color: var(--color-blue);
+}
+
+.rose {
+  background-color: var(--color-rose-200);
+}
+
+.gray {
+  background-color: var(--color-gray-600);
+}

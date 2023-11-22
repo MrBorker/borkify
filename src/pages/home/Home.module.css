@@ -1,2 +1,86 @@
 .root {
+  display: flex;
+}
+
+.images {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  width: 50%;
+  height: 100vh;
+}
+
+.image {
+  display: flex;
+  align-items: end;
+  justify-content: center;
+}
+
+.violet {
+  background-color: var(--color-violet);
+}
+
+.yellow {
+  background-color: var(--color-yellow);
+}
+
+.fucsia {
+  background-color: var(--color-fucsia);
+}
+
+.mint {
+  background-color: var(--color-mint);
+}
+
+.blue {
+  background-color: var(--color-blue);
+}
+
+.orange {
+  background-color: var(--color-orange);
+}
+
+.info {
+  width: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo {
+  position: absolute;
+  top: 30px;
+  left: 0;
+}
+
+.content {
+  position: relative;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.container {
+}
+
+.header {
+  font-weight: 600;
+  font-size: 64px;
+  color: var(--color-gray-1000);
+  margin-bottom: 30px;
+}
+
+.title {
+  font-weight: 400;
+  font-size: 32px;
+  color: var(--color-gray-900);
+  margin-bottom: 100px;
+}
+
+.btn-wrapper {
+  width: 100%;
+  height: fit-content;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 50px;
 }

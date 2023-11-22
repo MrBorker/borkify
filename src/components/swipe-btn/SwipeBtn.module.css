@@ -1,0 +1,21 @@
+.btn {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  position: absolute;
+  box-shadow: 0px 1px 10px 1px var(--color-gray-800);
+}
+
+.select {
+  background: center no-repeat url("../../../public/assets/svg/yes-btn.svg");
+  background-color: var(--color-mint);
+  right: -50px;
+  top: -50px;
+}
+
+.reject {
+  background: center no-repeat url("../../../public/assets/svg/no-btn.svg");
+  background-color: var(--color-rose-200);
+  left: -50px;
+  top: -50px;
+}
