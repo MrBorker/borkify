@@ -10,3 +10,4 @@ export { SwipeBtn } from "./swipe-btn";
 export { Presentation } from "./presentation";
 export { Filter } from "./filter";
 export { FilterRange } from "./filter-range";
+export { Notification } from "./notification";

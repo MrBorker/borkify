@@ -1,8 +1,10 @@
-import styles from "./Modal.module.css";
-import { Button, Message } from "../";
 import { useRef, useState } from "react";
-import { useAuth } from "../../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
+
+import { Button, Message } from "src/components";
+import { useAuth } from "src/contexts/AuthContext";
+
+import styles from "./Modal.module.css";
 
 function Modal({ setIsModalOn, isNewUser }) {
   const { signIn, signUp, sendPassword } = useAuth();

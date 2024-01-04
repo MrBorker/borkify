@@ -1,19 +1,37 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import { updateDoc, doc, Timestamp, setDoc } from "firebase/firestore";
+import { useDispatch, useSelector } from "react-redux";
+
+import { firestore } from "src/firebase";
+import { selectChatId } from "src/redux/selects";
+import { Ok, Edit } from "src/icons";
+
 import styles from "./ChatMessage.module.css";
-import { updateDoc, doc, Timestamp } from "firebase/firestore";
-import { firestore } from "../../firebase";
 
-function ChatMessage({ type, text, time }) {
+function ChatMessage({ type, text, time, id }) {
   const ref = useRef();
+  const [isEdit, setIsEdit] = useState(false);
+  const [newMessage, setNewMessage] = useState(text);
 
-  // const handleClick = async (id, updatedMessage, chatId) => {
-  //   await updateDoc(doc(firestore, "chats", chatId), {
-  //     messages: {
-  //       text: updatedMessage,
-  //       date: Timestamp.now(),
-  //     },
-  //   });
-  // };
+  const chatId = useSelector(selectChatId);
+
+  const handleEdit = () => {
+    setIsEdit(true);
+  };
+
+  const handleSubmit = async () => {
+    setIsEdit(false);
+    await setDoc(
+      doc(firestore, "chats", chatId),
+      {
+        [id]: {
+          text: newMessage,
+          date: Timestamp.now(),
+        },
+      },
+      { merge: true }
+    );
+  };
 
   useEffect(() => {
     ref.current?.scrollIntoView({ behavior: "smooth" });
@@ -22,23 +40,29 @@ function ChatMessage({ type, text, time }) {
   return (
     <div className={`${styles["message"]} ${styles[type]}`} ref={ref}>
       <div className={styles["wrapper"]}>
-        <p className={styles["text"]}>{text}</p>
-        {type === "out" && (
-          <button className={styles["edit-btn"]}>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width={21}
-              height={21}
-              fill="none"
-            >
-              <path
-                stroke="#848484"
-                strokeWidth={2}
-                d="M12.726 4.4 16.364 8M1.813 18.8 3.025 14 15.152 2l3.638 3.6-12.127 12-4.85 1.2Z"
+        {!isEdit && <p className={styles["text"]}>{text}</p>}
+        {type === "out" &&
+          (isEdit ? (
+            <>
+              <div className={styles["edit-wrapper"]}>
+                {newMessage}
+                <button onClick={handleSubmit} className={styles["btn"]}>
+                  <Ok />
+                </button>
+              </div>
+              <textarea
+                className={styles["input"]}
+                value={newMessage}
+                onChange={(event) => {
+                  setNewMessage(event.target.value);
+                }}
               />
-            </svg>
-          </button>
-        )}
+            </>
+          ) : (
+            <button className={styles["btn"]} onClick={handleEdit}>
+              <Edit />
+            </button>
+          ))}
       </div>
       <span className={styles["time"]}>{time}</span>
     </div>

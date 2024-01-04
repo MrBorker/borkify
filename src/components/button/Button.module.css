@@ -25,3 +25,11 @@
 .gray {
   background-color: var(--color-gray-600);
 }
+
+.violet {
+  background-color: var(--color-violet);
+}
+
+.fucsia {
+  background-color: var(--color-fucsia);
+}

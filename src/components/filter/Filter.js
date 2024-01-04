@@ -1,22 +1,29 @@
-import styles from "./Filter.module.css";
-import { breeds } from "../../config";
-import { Button, FilterRange } from "../";
+import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
 import Select from "react-select";
-import { setFilter, fetchUsersListFromFirestore } from "../../redux/matchSlice";
-import { useDispatch, useSelector } from "react-redux";
+
+import { breeds } from "src/config";
+import { Button, FilterRange } from "src/components";
+import { setFilter, fetchUsersListFromFirestore } from "src/redux/matchSlice";
+import { fetchUserInfoFromFirestore } from "src/redux/profileSlice";
+import { selectUserInfo } from "src/redux/selects";
+
+import styles from "./Filter.module.css";
 
 function Filter({ setFilterMode }) {
   const [distance, setDistance] = useState([5]);
-  const [age, setAge] = useState([3, 5]);
+  const [age, setAge] = useState([0, 20]);
   const [gender, setGender] = useState([]);
   const [breed, setBreed] = useState([]);
   const dispatch = useDispatch();
+  const userInfo = useSelector(selectUserInfo);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     await dispatch(setFilter({ distance, gender, breed, age }));
-    await dispatch(fetchUsersListFromFirestore());
+    await dispatch(fetchUserInfoFromFirestore(userInfo.userId));
+    // данные все равно старые
+    await dispatch(fetchUsersListFromFirestore(userInfo));
     setFilterMode(false);
   };
 
@@ -25,8 +32,6 @@ function Filter({ setFilterMode }) {
       ? setGender(gender.filter((item) => item !== event.target.value))
       : setGender([...gender, event.target.value]);
   };
-
-  console.log(gender);
 
   return (
     <div className={styles["root"]}>
@@ -75,6 +80,10 @@ function Filter({ setFilterMode }) {
         <Select
           options={breeds}
           isMulti="true"
+          onChange={(value) =>
+            value.map(({ value }) => setBreed([...breed, value]))
+          }
+          placeholder="All breeds"
           styles={{
             control: (baseStyles, state) => ({
               ...baseStyles,
@@ -156,7 +165,7 @@ function Filter({ setFilterMode }) {
             ),
           ]}
           max="20"
-          min="0"
+          min="0  "
           step="1"
           unit="y"
         />

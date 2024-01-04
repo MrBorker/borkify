@@ -1,22 +1,25 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-
-import { firestore } from "../firebase";
 import { collection, query, where, getDocs } from "firebase/firestore";
+
+import { firestore } from "src/firebase";
 
 export const fetchUsersListFromFirestore = createAsyncThunk(
   "match/fetchUsersListFromFirestore",
-  async () => {
-    const users = [];
+  async (userInfo) => {
+    let users = [];
     const usersCollection = await getDocs(
       query(collection(firestore, "users"))
     );
-    usersCollection.forEach((user) => {
-      users.push(user.data());
+    usersCollection.forEach((user) => users.push(user.data()));
+    users = users.filter(({ userId }) => {
+      return userId !== userInfo.userId;
     });
-    console.log(users);
+    if (userInfo.shownUsers)
+      users = users.filter(
+        ({ userId }) => !userInfo.shownUsers.includes(userId)
+      );
     return users;
   }
-  // query(collection(firestore, "users"), where("gender", "==", "Male"))
 );
 
 const initialState = {
@@ -40,13 +43,23 @@ const matchSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(fetchUsersListFromFirestore.fulfilled, (state, action) => {
-      if (state.gender.length === 1) {
-        state.collaborators = action.payload.filter(
-          (user) => user.gender === state.gender[0]
+      let collaborators = action.payload;
+      if (state.breed.length > 0) {
+        collaborators = collaborators.filter((user) =>
+          state.breed.find((breed) => breed === user.breed)
         );
-      } else {
-        state.collaborators = action.payload;
       }
+      if (state.gender.length > 0) {
+        collaborators = collaborators.filter((user) =>
+          state.gender.find((gender) => gender === user.gender)
+        );
+      }
+      if (state.age.length > 0) {
+        collaborators = collaborators.filter(
+          (user) => user.age >= state.age[0] && user.age <= state.age[1]
+        );
+      }
+      state.collaborators = collaborators;
     });
   },
 });

@@ -1,11 +1,12 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { setDoc, getDoc, doc } from "firebase/firestore";
-import { firestore } from "../firebase";
+
+import { firestore } from "src/firebase";
 
 export const addUserInfoToFirestore = createAsyncThunk(
   "profile/addUserInfoToFirestore",
   async (info) => {
-    await setDoc(doc(firestore, "users", info.userId), info);
+    await setDoc(doc(firestore, "users", info.userId), info, { merge: true });
   }
 );
 
@@ -26,9 +27,7 @@ const profileSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(addUserInfoToFirestore.fulfilled, (state, action) => {
-      console.log(action.payload);
-    });
+    builder.addCase(addUserInfoToFirestore.fulfilled, (state, action) => {});
     builder.addCase(fetchUserInfoFromFirestore.fulfilled, (state, action) => {
       state.userInfo = action.payload;
     });

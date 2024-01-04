@@ -1,35 +1,35 @@
-import { selectChat } from "../../redux/chatSlice";
 import { useDispatch, useSelector } from "react-redux";
-
-import styles from "./Chats.module.css";
-import { getFormatedDate } from "../../helpers/getFormatedDate";
-
-import { ChatPreview, ChatMessage } from "../../components";
-
+import { useEffect, useState } from "react";
 import {
   serverTimestamp,
   onSnapshot,
   doc,
   updateDoc,
+  setDoc,
   arrayUnion,
   Timestamp,
 } from "firebase/firestore";
-
-import { firestore } from "../../firebase";
-import { useEffect, useState } from "react";
 import { v4 as uuid } from "uuid";
 
+import { selectChat } from "src/redux/chatSlice";
+import { getFormatedDate } from "src/helpers/getFormatedDate";
+import { ChatPreview, ChatMessage } from "src/components";
+import { firestore } from "src/firebase";
 import {
   selectUserInfo,
   selectCollaboratorInfo,
   selectChatId,
-} from "../../redux/selects";
+} from "src/redux/selects";
+
+import styles from "./Chats.module.css";
 
 function Chats() {
   const [chats, setChats] = useState([]);
   const [messages, setMessages] = useState([]);
   const [isSelected, setIsSelected] = useState(false);
   const [newMessage, setNewMessage] = useState("");
+  const [search, setSearch] = useState("");
+  const [isSending, setisSending] = useState(false);
 
   const userInfo = useSelector(selectUserInfo);
   const collaboratorInfo = useSelector(selectCollaboratorInfo);
@@ -53,15 +53,30 @@ function Chats() {
     userInfo.userId && getChats();
   }, [userInfo.userId]);
 
-  const handleSelect = (user, chatId) => {
+  const handleSelect = async (user, chatId) => {
     userInfo && dispatch(selectChat({ collaboratorInfo: user, chatId }));
     setIsSelected(true);
+    // try {
+    //   await setDoc(
+    //     doc(firestore, "chats", chatId),
+    //     {
+    //       [id]: {
+    //         id: id,
+    //         text: newMessage,
+    //         senderId: userInfo.userId,
+    //         date: Timestamp.now(),
+    //         isNew: true,
+    //       },
+    //     },
+    //     { merge: true }
+    //   );
+    // } catch {}
   };
 
   useEffect(() => {
     const getMessages = () => {
       const unsubscribe = onSnapshot(doc(firestore, "chats", chatId), (doc) => {
-        doc.exists() && setMessages(doc.data().messages);
+        doc.exists() && setMessages(doc.data());
       });
       return () => {
         unsubscribe();
@@ -74,15 +89,23 @@ function Chats() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (!newMessage) return;
+    if (!newMessage.trim()) return;
+    setisSending(true);
     try {
-      await updateDoc(doc(firestore, "chats", chatId), {
-        messages: arrayUnion({
-          id: uuid(),
-          text: newMessage,
-          senderId: userInfo.userId,
-          date: Timestamp.now(),
-        }),
-      });
+      const id = Timestamp.now();
+      await setDoc(
+        doc(firestore, "chats", chatId),
+        {
+          [id]: {
+            id: id,
+            text: newMessage.trim(),
+            senderId: userInfo.userId,
+            date: Timestamp.now(),
+            isNew: true,
+          },
+        },
+        { merge: true }
+      );
       await updateDoc(doc(firestore, "userChats", userInfo.userId), {
         [chatId + ".lastMessage"]: {
           text: newMessage,
@@ -96,6 +119,7 @@ function Chats() {
         [chatId + ".date"]: serverTimestamp(),
       });
       setNewMessage("");
+      setisSending(false);
     } catch (error) {
       console.log(error);
     }
@@ -107,6 +131,9 @@ function Chats() {
         type="search"
         placeholder="Search..."
         className={styles["search"]}
+        onChange={(event) => {
+          setSearch(event.target.value);
+        }}
       />
 
       <div className={styles["header"]}>
@@ -129,31 +156,43 @@ function Chats() {
 
       <div className={styles["preview"]}>
         {chats &&
-          Object.entries(chats)
+          Object.values(chats)
             ?.sort((a, b) => b.date - a.date)
-            .map((chat) => (
-              <ChatPreview
-                key={chat[0]}
-                onClick={() => handleSelect(chat[1].userInfo, chat[0])}
-                title={chat[1].userInfo?.displayName}
-                message={chat[1].lastMessage?.text}
-                avatar={chat[1].userInfo?.photoUrl}
-                unread="true"
-              />
-            ))}
+            .map(({ chatId, userInfo, lastMessage }) => {
+              if (
+                lastMessage?.text.toLowerCase().includes(search) ||
+                userInfo?.displayName.toLowerCase().includes(search) ||
+                !search
+              ) {
+                return (
+                  <ChatPreview
+                    key={chatId}
+                    onClick={() => handleSelect(userInfo, chatId)}
+                    title={userInfo?.displayName}
+                    message={lastMessage?.text}
+                    avatar={userInfo?.photoUrl}
+                    unread="true"
+                  />
+                );
+              }
+              return false;
+            })}
       </div>
       {isSelected && (
         <div className={styles["selected"]}>
           <div className={styles["chat"]}>
             {messages &&
-              messages.map((message) => (
-                <ChatMessage
-                  key={message.id}
-                  type={message.senderId === userInfo.userId ? "out" : "in"}
-                  text={message.text}
-                  time={getFormatedDate(message.date.toDate())}
-                />
-              ))}
+              Object.values(messages)
+                ?.sort((a, b) => a.id - b.id)
+                .map(({ id, senderId, text, date }) => (
+                  <ChatMessage
+                    key={id}
+                    id={id}
+                    type={senderId === userInfo.userId ? "out" : "in"}
+                    text={text}
+                    time={getFormatedDate(date.toDate())}
+                  />
+                ))}
           </div>
           <form
             action=""
@@ -167,7 +206,11 @@ function Chats() {
               className={styles["new-message-input"]}
               onChange={(event) => setNewMessage(event.target.value)}
             ></input>
-            <button className={styles["new-message-btn"]} type="submit">
+            <button
+              className={styles["new-message-btn"]}
+              type="submit"
+              disabled={isSending}
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width={27}

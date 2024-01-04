@@ -1,17 +1,16 @@
-import styles from "./Profile.module.css";
-import { breeds } from "../../config";
-
-import { Button, InputRow, Message } from "../../components";
-
-import { useAuth } from "../../contexts/AuthContext";
 import { useState, useEffect } from "react";
-
-import { storage } from "../../firebase";
+import { useDispatch, useSelector } from "react-redux";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
-import { useDispatch, useSelector } from "react-redux";
-import { selectUserInfo } from "../../redux/selects";
-import { addUserInfoToFirestore } from "../../redux/profileSlice";
+import { breeds } from "src/config";
+import { Button, InputRow, Message } from "src/components";
+import { useAuth } from "src/contexts/AuthContext";
+import { storage } from "src/firebase";
+import { selectUserInfo } from "src/redux/selects";
+import { addUserInfoToFirestore } from "src/redux/profileSlice";
+import { fetchUserInfoFromFirestore } from "src/redux/profileSlice";
+
+import styles from "./Profile.module.css";
 
 function Profile() {
   const avatarDefault = "./assets/png/default-avatar.png";
@@ -52,6 +51,7 @@ function Profile() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     setMessage("");
+
     try {
       if (avatarToLoad) {
         // Load avatar to firebase storage
@@ -59,34 +59,43 @@ function Profile() {
           ref(storage, `avatars/${currentUser.uid}`),
           avatarToLoad
         );
+        const avatarUrl =
+          (await getDownloadURL(ref(storage, `avatars/${currentUser.uid}`))) ||
+          "";
+
+        dispatch(
+          addUserInfoToFirestore({
+            userId: currentUser.uid || "",
+            avatarUrl: avatarUrl || "",
+          })
+        );
       }
 
       // Get avatar link in a storage
-      const avatarUrl =
-        (await getDownloadURL(ref(storage, `avatars/${currentUser.uid}`))) ||
-        "";
 
       // Add form data to database throw redux toolkit
       dispatch(
         addUserInfoToFirestore({
-          userId: currentUser.uid,
-          userName: name,
-          location: location,
-          breed: breed,
-          age: age,
-          gender: gender,
-          about: about,
-          avatarUrl: avatarUrl,
+          userId: currentUser.uid || "",
+          userName: name || "",
+          location: location || "",
+          breed: breed || "",
+          age: age || "",
+          gender: gender || "",
+          about: about || "",
         })
       );
 
-      setMessage("You data has been sucessfully saved");
+      setMessage("You data has been successfully saved");
     } catch (err) {
       console.log(err);
     }
   };
 
-  // переместить на общий уровень загрузку данных + поместить их в хранилище
+  useEffect(() => {
+    if (!currentUser.uid) return;
+    dispatch(fetchUserInfoFromFirestore(currentUser.uid));
+  }, [dispatch, currentUser.uid]);
 
   // Get data from database and fill the form with saved values
   useEffect(() => {
