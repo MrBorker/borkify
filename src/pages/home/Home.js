@@ -94,7 +94,7 @@ function Home() {
             </div>
             <div className={styles["cta-container"]}>
               <h1 className={styles["cta-header"]}>
-                Hi, fluffy <br /> buddy
+                Wanna woof <br /> together?
               </h1>
               <h3 className={styles["cta-title"]}>Join our pawsitive team</h3>
               <div className={styles["cta-btn-wrapper"]}>
