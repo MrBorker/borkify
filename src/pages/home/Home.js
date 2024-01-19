@@ -1,10 +1,10 @@
 import { useState } from "react";
-import { Navigate, Link } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 
 import { Button, Modal, Shadow, Carousel } from "src/components/";
 import { useAuth } from "src/contexts/AuthContext";
-import { Logo } from "src/icons";
-import { testimonials } from "./constants";
+import { Github, Linkedin, Logo, Telegram } from "src/icons";
+import { testimonials, features } from "./constants";
 
 import styles from "./Home.module.css";
 
@@ -60,23 +60,24 @@ function Home() {
             <div className={styles["hero-container"]}>
               <h1 className={styles["hero-header"]}>Dog meetup application</h1>
               <p className={styles["hero-info"]}>
-                Borkify is your friendly neighbourhood dog meetup app! Match,
-                chat and meet the dogs and their owners near you using
-                geolocation.{" "}
+                Welcome to the space where tails are meant to wag and paws are
+                meant to play. Whether you are a playful pup or a senior dog,
+                borkify is your destination for unleashing the ultimate canine
+                adventures.
               </p>
               <div className={styles["hero-btn-wrapper"]}>
-                <Button
-                  color="violet"
-                  text="LEARN MORE"
-                  onClick={handleSignIn}
-                />
-                <Button color="fucsia" text="JOIN" onClick={handleSignUp} />
+                <a href="#reviews" className={styles["hero-btn"]}>
+                  learn more
+                </a>
+                <a href="#cta" className={styles["hero-btn"]}>
+                  join
+                </a>
               </div>
             </div>
             <div className={styles["hero-images"]}>
               <div>
                 <img
-                  src="./assets/png/hero-1.png"
+                  src="./assets/hero/hero-1.png"
                   className={styles["hero-image-vertical"]}
                   alt=""
                 />
@@ -84,14 +85,14 @@ function Home() {
               <div className={styles["hero-images-wrapper"]}>
                 <div>
                   <img
-                    src="./assets/png/hero-2.png"
+                    src="./assets/hero/hero-2.png"
                     className={styles["hero-image-horizontal"]}
                     alt=""
                   />
                 </div>
                 <div>
                   <img
-                    src="./assets/png/hero-3.png"
+                    src="./assets/hero/hero-3.png"
                     className={styles["hero-image-horizontal"]}
                     alt=""
                   />
@@ -100,28 +101,62 @@ function Home() {
             </div>
           </div>
         </section>
+        <section className={styles["features"]}>
+          <div className={styles["features-masonry"]}>
+            {features.map(({ front, back, color, text, size }) => {
+              return (
+                <div
+                  className={`${styles["features-card"]} ${styles[size]}`}
+                  key={front}
+                  style={{ color: color }}
+                >
+                  <div className={styles["rotate"]}>
+                    <div className={styles["features-card-front"]}>
+                      <img
+                        src={front}
+                        alt=""
+                        className={styles["features-card-img-front"]}
+                      />
+                    </div>
+
+                    <div className={styles["features-card-back"]}>
+                      <img
+                        src={back}
+                        alt=""
+                        className={styles["features-card-img-back"]}
+                      />
+                      <span className={styles["features-card-title"]}>
+                        {text}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </section>
         <section className={styles["testimonials"]} id="reviews">
           <Carousel array={testimonials} />
         </section>
         <section className={styles["cta"]}>
           <div className={styles["cta-images"]}>
             <div className={`${styles["violet"]} ${styles["cta-image"]}`}>
-              <img src="./assets/png/dog-1.png" alt="" />
+              <img src="./assets/cta/dog-1.png" alt="" />
             </div>
             <div className={`${styles["yellow"]} ${styles["cta-image"]}`}>
-              <img src="./assets/png/dog-2.png" alt="" />
+              <img src="./assets/cta/dog-2.png" alt="" />
             </div>
             <div className={`${styles["mint"]} ${styles["cta-image"]}`}>
-              <img src="./assets/png/dog-3.png" alt="" />
+              <img src="./assets/cta/dog-3.png" alt="" />
             </div>
             <div className={`${styles["orange"]} ${styles["cta-image"]}`}>
-              <img src="./assets/png/dog-4.png" alt="" />
+              <img src="./assets/cta/dog-4.png" alt="" />
             </div>
             <div className={`${styles["fucsia"]} ${styles["cta-image"]}`}>
-              <img src="./assets/png/dog-5.png" alt="" />
+              <img src="./assets/cta/dog-5.png" alt="" />
             </div>
             <div className={`${styles["blue"]} ${styles["cta-image"]}`}>
-              <img src="./assets/png/dog-6.png" alt="" />
+              <img src="./assets/cta/dog-6.png" alt="" />
             </div>
           </div>
           <div className={styles["cta-info"]} id="cta">
@@ -147,6 +182,33 @@ function Home() {
           )}
         </section>
       </main>
+      <footer className={styles["footer"]}>
+        <div className={styles["footer-container"]}>
+          <span className={styles["footer-title"]}>
+            Portfolio project <br />
+            Depeloped by Anastasia Kondratiuk @mr-borker
+          </span>
+          <div className={styles["footer-links"]}>
+            <a
+              href="https://www.linkedin.com/in/anastasia-kondratiuk-6021a51b2/"
+              target="_blank"
+              rel="noreferrer"
+            >
+              <Linkedin />
+            </a>
+            <a
+              href="https://github.com/MrBorker"
+              target="_blank"
+              rel="noreferrer"
+            >
+              <Github />
+            </a>
+            <a href="https://t.me/mr_borker" target="_blank" rel="noreferrer">
+              <Telegram />
+            </a>
+          </div>
+        </div>
+      </footer>
     </>
   );
 }

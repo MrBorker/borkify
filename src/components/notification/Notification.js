@@ -9,7 +9,7 @@ function Notification({ text, onClick }) {
       <Button text="filter" color="rose" onClick={onClick}></Button>
       <img
         className={styles["image"]}
-        src="/assets/png/notification.png"
+        src="/assets/admin/notification.png"
         alt=""
       />
     </div>

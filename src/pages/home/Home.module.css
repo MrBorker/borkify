@@ -1,8 +1,8 @@
 .header {
-  position: fixed;
-  top: 26px;
+  /* position: fixed; */
+  /* top: 26px; */
   width: 100%;
-  padding: 0 45px;
+  padding: 26px 45px 0 45px;
   z-index: 10;
 }
 
@@ -13,9 +13,6 @@
   max-width: 1350px;
   width: 100%;
   margin: 0 auto;
-}
-
-.header-logo {
 }
 
 .header-navigation {
@@ -48,7 +45,8 @@
 
 .hero-root {
   display: flex;
-  height: 100vh;
+  height: calc(100vh - 80px);
+  max-height: 1028px;
   justify-content: space-between;
   align-items: flex-end;
   position: relative;
@@ -109,6 +107,25 @@
   justify-content: space-between;
 }
 
+.hero-btn {
+  background-color: var(--color-violet);
+  color: white;
+  font-size: 24px;
+  font-weight: 700;
+  padding: 10px 0px;
+  text-decoration: none;
+  text-transform: uppercase;
+  border-radius: 10px;
+  max-width: 185px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.hero-btn:last-child {
+  background-color: var(--color-fucsia);
+}
+
 .hero-images {
   display: flex;
   gap: 27px;
@@ -144,10 +161,137 @@
   box-shadow: 2px 2px 22px 1px rgba(153, 153, 153, 0.25);
 }
 
+/* features */
+
+.features {
+  width: 100%;
+  height: 100vh;
+  max-height: 1028px;
+  padding: 100px 0 0 0;
+  display: flex;
+  justify-content: center;
+}
+
+.features-masonry {
+  padding: 0 50px;
+  width: 100%;
+  max-width: 1920px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-auto-rows: 250px;
+  gap: 30px;
+}
+
+.features-card {
+}
+
+.rotate {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: currentColor;
+  height: 100%;
+  position: relative;
+  transition: transform 0.5s ease;
+  pointer-events: none;
+}
+
+.features-card:hover > .rotate {
+  transform: perspective(600px) rotateY(180deg);
+  background-color: var(--color-white);
+  box-shadow: 0px 0.618px 3.297px 0px rgba(182, 182, 182, 0.06),
+    0px 1.564px 8.34px 0px rgba(182, 182, 182, 0.09),
+    0px 3.19px 17.012px 0px rgba(182, 182, 182, 0.11),
+    0px 6.57px 35.042px 0px rgba(182, 182, 182, 0.14),
+    0px 18px 96px 0px rgba(182, 182, 182, 0.2);
+}
+
+.features-card:hover .features-card-front {
+  display: none;
+}
+
+.features-card:hover .features-card-back {
+  display: flex;
+}
+
+.features-card-front {
+  transform: rotateY(180deg);
+  animation: fadeIn 0.5s ease;
+}
+
+.features-card-back {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 25px;
+  transform: rotateY(-180deg);
+  animation: fadeIn 0.5s ease;
+  position: relative;
+}
+
+.features-card-back::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: url("/public/assets/features/paw-s.png");
+}
+
+.small {
+  min-height: 210px;
+  transform: rotate(2deg);
+}
+
+.large {
+  min-height: 440px;
+  grid-row: span 2;
+  transform: rotate(-2deg);
+}
+
+.small .features-card-img-front {
+  max-width: 270px;
+  max-height: 190px;
+  display: block;
+}
+
+.large .features-card-img-front {
+  max-width: 270px;
+  max-height: 400px;
+  display: block;
+}
+
+.features-card-img-back {
+  max-width: 236px;
+  max-height: 350px;
+}
+
+.features-card-title {
+  color: var(--color-black);
+  font-size: 24px;
+  font-weight: 600;
+  text-align: center;
+  max-width: 236px;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  15% {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
 /* testimonials */
 
 .testimonials {
   height: 100vh;
+  max-height: 1028px;
   width: 100%;
   display: flex;
   align-items: center;
@@ -159,7 +303,10 @@
 .cta {
   display: flex;
   justify-content: flex-start;
+  max-width: 1920px;
   width: 100%;
+  margin: 0 auto;
+  padding: 0 0 100px 0;
 }
 
 .cta-images {
@@ -167,6 +314,7 @@
   grid-template-columns: 1fr 1fr;
   width: 50%;
   height: 100vh;
+  max-height: 1028px;
   padding: 20px;
   gap: 20px;
 }
@@ -248,4 +396,44 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   column-gap: 50px;
+}
+
+/* footer */
+
+.footer {
+  height: 350px;
+  position: relative;
+}
+
+.footer::after {
+  content: "";
+  width: 100%;
+  height: 350px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: var(--color-violet);
+  clip-path: polygon(0 61%, 100% 0, 100% 100%, 0% 100%);
+  z-index: -5;
+}
+
+.footer-container {
+  display: flex;
+  justify-content: space-between;
+  max-width: 1350px;
+  margin: 0 auto;
+  height: 100%;
+  align-items: flex-end;
+  padding: 0 0 50px 0;
+}
+
+.footer-links {
+  display: flex;
+  gap: 50px;
+}
+
+.footer-title {
+  color: var(--color-white);
+  font-size: 20px;
+  font-weight: 600;
 }

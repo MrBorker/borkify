@@ -13,7 +13,7 @@ import { fetchUserInfoFromFirestore } from "src/redux/profileSlice";
 import styles from "./Profile.module.css";
 
 function Profile() {
-  const avatarDefault = "./assets/png/default-avatar.png";
+  const avatarDefault = "./assets/admin/default-avatar.png";
 
   const { currentUser } = useAuth();
 
