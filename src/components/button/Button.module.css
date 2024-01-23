@@ -33,3 +33,12 @@
 .fucsia {
   background-color: var(--color-fucsia);
 }
+
+@media screen and (max-width: 680px) {
+  .btn {
+    font-weight: 600;
+    font-size: 22px;
+    padding: 10px 0;
+    width: 160px;
+  }
+}

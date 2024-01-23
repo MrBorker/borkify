@@ -1,8 +1,4 @@
 .root {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
 }
 
 .container {
@@ -21,7 +17,7 @@
 
 .img-container {
   position: relative;
-  z-index: 5;
+  z-index: 3;
 }
 
 .img-container::before {
@@ -78,4 +74,123 @@
   display: flex;
   gap: 32px;
   margin-top: auto;
+}
+
+@media screen and (max-width: 1280px) {
+  .btn-container {
+    gap: 30px;
+    top: -10px;
+  }
+
+  .rating {
+    gap: 10px;
+    margin-bottom: 43px;
+  }
+
+  .info {
+    font-size: 28px;
+    margin-bottom: 22px;
+  }
+}
+
+@media screen and (max-width: 980px) {
+  .root {
+    display: flex;
+    align-items: center;
+    width: 100%;
+  }
+
+  .container {
+    display: flex;
+    gap: 30px;
+    position: relative;
+  }
+
+  .btn-container {
+    display: none;
+  }
+
+  .img-container {
+    position: relative;
+    z-index: 3;
+  }
+
+  .img-container::before {
+    content: "";
+    width: 80%;
+    height: calc(100% + 20px);
+    position: absolute;
+    color: inherit;
+    background-color: currentColor;
+    z-index: -1;
+    left: -10px;
+    top: -10px;
+    clip-path: polygon(0 0, 30% 0, 81% 100%, 0% 100%);
+  }
+
+  .img {
+    max-width: 559px;
+    width: 100%;
+    display: block;
+  }
+
+  .content-container {
+    justify-content: center;
+  }
+
+  .content {
+    margin-top: 0;
+  }
+
+  .rating {
+    display: none;
+  }
+
+  .info {
+    font-size: 22px;
+    margin-bottom: 32px;
+  }
+
+  .note {
+    font-size: 18px;
+    margin-bottom: 20px;
+  }
+
+  .pagination {
+    position: absolute;
+    bottom: -100px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}
+
+@media screen and (max-width: 680px) {
+  .root {
+    min-height: 700px;
+  }
+
+  .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+    position: static;
+    margin: 0 auto;
+  }
+
+  .pagination {
+    position: absolute;
+    bottom: 0px;
+    left: 50%;
+    transform: translateX(-50%);
+    gap: 25px;
+  }
+
+  .info {
+    text-align: center;
+  }
+
+  .note {
+    text-align: center;
+  }
 }

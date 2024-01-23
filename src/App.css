@@ -29,6 +29,11 @@
   --color-black-shadow: #00000014;
 }
 
+html,
+body {
+  scroll-behavior: smooth;
+}
+
 html {
   font-family: "Quicksand", sans-serif;
   box-sizing: border-box;

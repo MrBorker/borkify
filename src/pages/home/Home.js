@@ -1,26 +1,35 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Navigate } from "react-router-dom";
 
 import { Button, Modal, Shadow, Carousel } from "src/components/";
 import { useAuth } from "src/contexts/AuthContext";
-import { Github, Linkedin, Logo, Telegram } from "src/icons";
-import { testimonials, features } from "./constants";
+import { Github, Linkedin, Logo, Telegram, Burger, Close } from "src/icons";
+import { testimonials, features, cta, navigation } from "./constants";
 
 import styles from "./Home.module.css";
 
 function Home() {
   const [isModalOn, setIsModalOn] = useState(false);
+  const [isBurgerOn, setIsBurgerOn] = useState(false);
   const [isNewUser, setIsNewUser] = useState();
 
   const handleSignIn = () => {
-    setIsModalOn(1);
+    setIsModalOn(true);
     setIsNewUser(false);
   };
 
   const handleSignUp = () => {
-    setIsModalOn(1);
+    setIsModalOn(true);
     setIsNewUser(true);
   };
+
+  const handleBurger = () => {
+    setIsBurgerOn(!isBurgerOn);
+  };
+
+  useEffect(() => {
+    document.body.style.overflow = isBurgerOn ? "hidden" : "auto";
+  }, [isBurgerOn]);
 
   const { currentUser } = useAuth();
 
@@ -29,32 +38,48 @@ function Home() {
   }
 
   return (
-    <>
+    <div className={styles["root"]}>
       <header className={styles["header"]}>
         <div className={styles["header-container"]}>
           <a href="/" className={styles["header-logo"]}>
             <Logo color="#fff" />
           </a>
-          <nav className={styles["header-navigation"]}>
-            <a href="/" className={styles["header-navigation-link"]}>
-              Home
-            </a>
-            <a href="/" className={styles["header-navigation-link"]}>
-              About
-            </a>
-            <a href="/" className={styles["header-navigation-link"]}>
-              Features
-            </a>
-            <a href="#reviews" className={styles["header-navigation-link"]}>
-              Reviews
-            </a>
+          <nav
+            className={`${styles["header-navigation"]} ${
+              isBurgerOn ? "" : styles["hidden"]
+            }`}
+          >
+            {navigation.map(({ href, text }) => {
+              return (
+                <a
+                  href={href}
+                  className={styles["header-navigation-link"]}
+                  onClick={handleBurger}
+                  key={text}
+                >
+                  {text}
+                </a>
+              );
+            })}
+            <button
+              className={styles["header-close-btn"]}
+              onClick={handleBurger}
+            >
+              <Close color="#fff" />
+            </button>
           </nav>
           <a href="#cta" className={styles["header-btn"]}>
             app
           </a>
+          <button
+            className={styles["header-burger-btn"]}
+            onClick={handleBurger}
+          >
+            <Burger />
+          </button>
         </div>
       </header>
-      <main className={styles["root"]}>
+      <main className={styles["main"]}>
         <section className={styles["hero"]}>
           <div className={styles["hero-root"]}>
             <div className={styles["hero-container"]}>
@@ -101,7 +126,7 @@ function Home() {
             </div>
           </div>
         </section>
-        <section className={styles["features"]}>
+        <section className={styles["features"]} id="features">
           <div className={styles["features-masonry"]}>
             {features.map(({ front, back, color, text, size }) => {
               return (
@@ -138,28 +163,24 @@ function Home() {
         <section className={styles["testimonials"]} id="reviews">
           <Carousel array={testimonials} />
         </section>
-        <section className={styles["cta"]}>
+        <section className={styles["cta"]} id="cta">
           <div className={styles["cta-images"]}>
-            <div className={`${styles["violet"]} ${styles["cta-image"]}`}>
-              <img src="./assets/cta/dog-1.png" alt="" />
-            </div>
-            <div className={`${styles["yellow"]} ${styles["cta-image"]}`}>
-              <img src="./assets/cta/dog-2.png" alt="" />
-            </div>
-            <div className={`${styles["mint"]} ${styles["cta-image"]}`}>
-              <img src="./assets/cta/dog-3.png" alt="" />
-            </div>
-            <div className={`${styles["orange"]} ${styles["cta-image"]}`}>
-              <img src="./assets/cta/dog-4.png" alt="" />
-            </div>
-            <div className={`${styles["fucsia"]} ${styles["cta-image"]}`}>
-              <img src="./assets/cta/dog-5.png" alt="" />
-            </div>
-            <div className={`${styles["blue"]} ${styles["cta-image"]}`}>
-              <img src="./assets/cta/dog-6.png" alt="" />
-            </div>
+            {cta.map(({ src, color, degree }) => {
+              return (
+                <div
+                  className={styles["cta-image-wrapper"]}
+                  style={{
+                    backgroundColor: color,
+                    transform: `rotate(${degree})`,
+                  }}
+                  key={src}
+                >
+                  <img src={src} alt="" className={styles["cta-image"]} />
+                </div>
+              );
+            })}
           </div>
-          <div className={styles["cta-info"]} id="cta">
+          <div className={styles["cta-info"]}>
             <div className={styles["cta-content"]}>
               <div className={styles["cta-logo"]}>
                 <Logo color="#E40066" />
@@ -170,13 +191,24 @@ function Home() {
                 </h1>
                 <h3 className={styles["cta-title"]}>Join our pawsitive team</h3>
                 <div className={styles["cta-btn-wrapper"]}>
-                  <Button color="mint" text="sign in" onClick={handleSignIn} />
-                  <Button color="blue" text="new bork" onClick={handleSignUp} />
+                  <a href="#cta">
+                    <Button
+                      color="mint"
+                      text="sign in"
+                      onClick={handleSignIn}
+                    />
+                  </a>
+                  <a href="#cta">
+                    <Button
+                      color="blue"
+                      text="new bork"
+                      onClick={handleSignUp}
+                    />
+                  </a>
                 </div>
               </div>
             </div>
           </div>
-          {isModalOn && <Shadow setIsModalOn={setIsModalOn} />}
           {isModalOn && (
             <Modal setIsModalOn={setIsModalOn} isNewUser={isNewUser} />
           )}
@@ -209,7 +241,8 @@ function Home() {
           </div>
         </div>
       </footer>
-    </>
+      {isModalOn && <Shadow setIsModalOn={setIsModalOn} />}
+    </div>
   );
 }
 

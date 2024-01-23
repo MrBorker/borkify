@@ -1,3 +1,9 @@
+export const navigation = [
+  { href: "/", text: "Home" },
+  { href: "#features", text: "Features" },
+  { href: "#reviews", text: "Reviews" },
+];
+
 export const testimonials = [
   {
     name: "- Bunny // Shiba Inu",
@@ -91,4 +97,13 @@ export const features = [
     color: "#345995",
     size: "small",
   },
+];
+
+export const cta = [
+  { src: "./assets/cta/dog-1.png", color: "#610F7F", degree: "-1.5deg" },
+  { src: "./assets/cta/dog-2.png", color: "#EAC435", degree: "1.5deg" },
+  { src: "./assets/cta/dog-3.png", color: "#03CEA4", degree: "1.5deg" },
+  { src: "./assets/cta/dog-4.png", color: "#FB4D3D", degree: "-1.5deg" },
+  { src: "./assets/cta/dog-5.png", color: "#E40066", degree: "-1.5deg" },
+  { src: "./assets/cta/dog-6.png", color: "#345995", degree: "1.5deg" },
 ];
