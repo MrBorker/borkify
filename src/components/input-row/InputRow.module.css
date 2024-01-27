@@ -22,7 +22,7 @@
   color: var(--color-gray-400);
   font-size: 20px;
   font-weight: 600;
-  padding: 10px 20px 10px 20px;
+  padding: 10px 20px;
   resize: none;
 }
 
@@ -30,4 +30,7 @@
   position: absolute;
   right: 20px;
   bottom: 10px;
+}
+
+@media screen and (max-width: 500px) {
 }

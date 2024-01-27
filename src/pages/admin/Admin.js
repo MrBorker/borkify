@@ -11,10 +11,10 @@ function Admin() {
         <ul className={styles["list"]}>
           {sidebar.map(({ link, icon, text }) => {
             return (
-              <li className={`${styles["item"]}`}>
+              <li className={`${styles["item"]}`} key={link}>
                 <Link to={link} className={styles["link"]}>
                   <div className={styles["icon"]}>{icon}</div>
-                  {text}
+                  <div className={styles["text"]}>{text}</div>
                 </Link>
               </li>
             );

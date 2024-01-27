@@ -1,24 +1,27 @@
 .root {
+  width: 100%;
+  max-width: 800px;
 }
 
-/* PRESENTATION *********** */
+/* PRESENTATION  */
 
 .presentation {
   display: flex;
-  margin: 0px 30px 0 20px;
   justify-content: space-between;
-  gap: 80px;
+  gap: 60px;
 }
 
 .avatar {
-  width: 368px;
+  width: 100%;
+  max-width: 368px;
   height: 570px;
   position: relative;
 }
 
 .avatar-img {
   object-fit: cover;
-  width: 368px;
+  width: 100%;
+  max-width: 368px;
   height: 570px;
   border-radius: 20px;
 }
@@ -27,12 +30,14 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  min-width: 50%;
 }
 
 .header-container {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 50px;
 }
 
 .header {
@@ -77,4 +82,38 @@
   background-color: var(--color-rose-100);
   padding: 15px 20px;
   border-radius: 20px;
+  max-width: 500px;
+}
+
+@media screen and (max-width: 1000px) {
+  .root {
+    max-width: 600px;
+    margin-bottom: 70px;
+  }
+
+  .presentation {
+    flex-direction: column;
+    align-items: center;
+    margin: 50px 20px 0px 20px;
+    gap: 30px;
+  }
+
+  .avatar {
+    max-width: 368px;
+    height: 400px;
+  }
+
+  .avatar-img {
+    height: 400px;
+  }
+
+  .header {
+    color: var(--color-rose-200);
+    font-size: 38px;
+    font-weight: 600;
+  }
+
+  .bio {
+    margin: 30px 0 20px 0;
+  }
 }
