@@ -1,12 +1,21 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { collection, query, where, getDocs } from "firebase/firestore";
+import {
+  collection,
+  query,
+  getDocs,
+  setDoc,
+  doc,
+  arrayUnion,
+} from "firebase/firestore";
 
 import { firestore } from "src/firebase";
 
 export const fetchUsersListFromFirestore = createAsyncThunk(
   "match/fetchUsersListFromFirestore",
-  async (userInfo) => {
+  async (_, { getState }) => {
+    const { userInfo } = getState().profile;
     let users = [];
+
     const usersCollection = await getDocs(
       query(collection(firestore, "users"))
     );
@@ -19,6 +28,20 @@ export const fetchUsersListFromFirestore = createAsyncThunk(
         ({ userId }) => !userInfo.shownUsers.includes(userId)
       );
     return users;
+  }
+);
+
+export const addCollaboratorToShownList = createAsyncThunk(
+  "match/addCollaboratorToShownList",
+  async (collaboratorId, { getState }) => {
+    const { userId } = getState().profile.userInfo;
+    setDoc(
+      doc(firestore, "users", userId),
+      {
+        shownUsers: arrayUnion(collaboratorId),
+      },
+      { merge: true }
+    );
   }
 );
 
@@ -59,6 +82,8 @@ const matchSlice = createSlice({
           (user) => user.age >= state.age[0] && user.age <= state.age[1]
         );
       }
+      // check if collaborator filled his data
+      collaborators = collaborators.filter((user) => user.userName !== "");
       state.collaborators = collaborators;
     });
   },

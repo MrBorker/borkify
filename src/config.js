@@ -1,3 +1,8 @@
+export const defaultAvatarMatch =
+  "https://firebasestorage.googleapis.com/v0/b/borkify-f2040.appspot.com/o/avatars%2Fdefault-avatar-match.png?alt=media&token=594d15e0-1c96-4510-8edb-5621a5cde7b8";
+
+export const avatarDefault = "/assets/admin/default-avatar.png";
+
 export const breeds = [
   {
     id: 1,
@@ -568,6 +573,11 @@ export const breeds = [
     id: 168,
     value: "Miniature Schnauzer",
     label: "Miniature Schnauzer",
+  },
+  {
+    id: 169,
+    value: "Mixed",
+    label: "Mixed",
   },
   {
     id: 171,

@@ -8,9 +8,9 @@ import { Close } from "src/icons";
 import styles from "./Modal.module.css";
 
 function Modal({ setIsModalOn, isNewUser }) {
-  const { signIn, signUp, sendPassword } = useAuth();
-
   const history = useNavigate();
+
+  const { signIn, signUp, sendPassword } = useAuth();
 
   const [resetPassword, setResetPassword] = useState(false);
   const [error, setError] = useState("");

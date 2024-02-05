@@ -19,7 +19,6 @@ export const fetchUserInfoFromFirestore = createAsyncThunk(
 
 const initialState = {
   userInfo: {},
-  isLoading: true,
 };
 
 const profileSlice = createSlice({

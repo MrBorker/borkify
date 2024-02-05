@@ -3,22 +3,21 @@ import { useDispatch, useSelector } from "react-redux";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
 import { breeds } from "src/config";
-import { Button, InputRow, Message } from "src/components";
+import { Button, InputRow, Message, SelectInput } from "src/components";
 import { useAuth } from "src/contexts/AuthContext";
 import { storage } from "src/firebase";
 import { selectUserInfo } from "src/redux/selects";
 import { addUserInfoToFirestore } from "src/redux/profileSlice";
-import { fetchUserInfoFromFirestore } from "src/redux/profileSlice";
+
 import { LoadAvatar } from "src/icons";
+import { avatarDefault } from "src/config";
 
 import styles from "./Profile.module.css";
 
 function Profile() {
-  const avatarDefault = "./assets/admin/default-avatar.png";
+  const dispatch = useDispatch();
 
   const { currentUser } = useAuth();
-
-  const dispatch = useDispatch();
   const userInfo = useSelector(selectUserInfo);
 
   const [error, setError] = useState();
@@ -51,7 +50,7 @@ function Profile() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    setMessage("");
+    setError("");
 
     try {
       if (avatarToLoad) {
@@ -60,6 +59,7 @@ function Profile() {
           ref(storage, `avatars/${currentUser.uid}`),
           avatarToLoad
         );
+        // Get avatar link in a storage
         const avatarUrl =
           (await getDownloadURL(ref(storage, `avatars/${currentUser.uid}`))) ||
           "";
@@ -72,10 +72,14 @@ function Profile() {
         );
       }
 
-      // Get avatar link in a storage
+      // Check if all fields are filled
+      if (!name || !location || !breed || !age || !gender || !about) {
+        setError("Please fill all the fields to appear in search");
+        return;
+      }
 
       // Add form data to database throw redux toolkit
-      dispatch(
+      await dispatch(
         addUserInfoToFirestore({
           userId: currentUser.uid || "",
           userName: name || "",
@@ -88,15 +92,14 @@ function Profile() {
       );
 
       setMessage("You data has been successfully saved");
+      setTimeout(() => {
+        setMessage("");
+      }, 2000);
+      console.log(breed);
     } catch (err) {
       console.log(err);
     }
   };
-
-  useEffect(() => {
-    if (!currentUser.uid) return;
-    dispatch(fetchUserInfoFromFirestore(currentUser.uid));
-  }, [dispatch, currentUser.uid]);
 
   // Get data from database and fill the form with saved values
   useEffect(() => {
@@ -148,24 +151,20 @@ function Profile() {
         />
         <fieldset className={styles["row"]}>
           <label htmlFor="breed">breed</label>
-          <input
+          {/* <input
             type="text"
             list="list"
             id="breed"
             value={breed || ""}
             onChange={(event) => setBreed(event.target.value)}
-          />
-          <datalist id="list">
-            {breeds.map((breed) => (
-              <option key={breed.id} value={breed.name}></option>
-            ))}
-          </datalist>
+          /> */}
+          <SelectInput isForProfile={true} breed={breed} setBreed={setBreed} />
         </fieldset>
         <InputRow
           htmlFor="age"
-          type="text"
+          type="number"
           id="age"
-          labelText="age"
+          labelText="age, years"
           value={age || ""}
           onChange={(event) => setAge(event.target.value)}
         />

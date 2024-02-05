@@ -11,3 +11,4 @@ export { Filter } from "./filter";
 export { FilterRange } from "./filter-range";
 export { Notification } from "./notification";
 export { Carousel } from "./carousel";
+export { SelectInput } from "./select-input";

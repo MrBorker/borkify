@@ -1,19 +1,21 @@
 import { useEffect, useRef, useState } from "react";
-import { updateDoc, doc, Timestamp, setDoc } from "firebase/firestore";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
-import { firestore } from "src/firebase";
-import { selectChatId } from "src/redux/selects";
 import { Ok, Edit } from "src/icons";
+import {
+  updateChatInfo,
+  setMessage,
+  addMessageToChat,
+} from "src/redux/chatSlice";
 
 import styles from "./ChatMessage.module.css";
 
-function ChatMessage({ type, text, time, id }) {
+function ChatMessage({ type, text, time, id, isLast, userId, collaboratorId }) {
+  const dispatch = useDispatch();
+
   const ref = useRef();
   const [isEdit, setIsEdit] = useState(false);
   const [newMessage, setNewMessage] = useState(text);
-
-  const chatId = useSelector(selectChatId);
 
   const handleEdit = () => {
     setIsEdit(true);
@@ -21,16 +23,16 @@ function ChatMessage({ type, text, time, id }) {
 
   const handleSubmit = async () => {
     setIsEdit(false);
-    await setDoc(
-      doc(firestore, "chats", chatId),
-      {
-        [id]: {
-          text: newMessage,
-          date: Timestamp.now(),
-        },
-      },
-      { merge: true }
-    );
+    dispatch(setMessage(newMessage));
+    try {
+      await dispatch(addMessageToChat(id));
+      if (isLast) {
+        await dispatch(updateChatInfo(userId));
+        await dispatch(updateChatInfo(collaboratorId));
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   useEffect(() => {

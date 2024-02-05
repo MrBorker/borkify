@@ -1,16 +1,13 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import {
-  serverTimestamp,
-  onSnapshot,
-  doc,
-  updateDoc,
-  setDoc,
-  arrayUnion,
-  Timestamp,
-} from "firebase/firestore";
+import { onSnapshot, doc, Timestamp } from "firebase/firestore";
 
-import { selectChat } from "src/redux/chatSlice";
+import {
+  selectChat,
+  setMessage,
+  addMessageToChat,
+  updateChatInfo,
+} from "src/redux/chatSlice";
 import { getFormatedDate } from "src/helpers/getFormatedDate";
 import { ChatPreview, ChatMessage } from "src/components";
 import { firestore } from "src/firebase";
@@ -20,6 +17,7 @@ import {
   selectChatId,
 } from "src/redux/selects";
 import { ArrowBack, SendBtn } from "src/icons";
+import { defaultAvatarMatch } from "src/config";
 
 import styles from "./Chats.module.css";
 
@@ -56,21 +54,6 @@ function Chats() {
   const handleSelect = async (user, chatId) => {
     userInfo && dispatch(selectChat({ collaboratorInfo: user, chatId }));
     setIsSelected(true);
-    // try {
-    //   await setDoc(
-    //     doc(firestore, "chats", chatId),
-    //     {
-    //       [id]: {
-    //         id: id,
-    //         text: newMessage,
-    //         senderId: userInfo.userId,
-    //         date: Timestamp.now(),
-    //         isNew: true,
-    //       },
-    //     },
-    //     { merge: true }
-    //   );
-    // } catch {}
   };
 
   useEffect(() => {
@@ -91,33 +74,11 @@ function Chats() {
     if (!newMessage) return;
     if (!newMessage.trim()) return;
     setisSending(true);
+    dispatch(setMessage(newMessage));
     try {
-      const id = Timestamp.now();
-      await setDoc(
-        doc(firestore, "chats", chatId),
-        {
-          [id]: {
-            id: id,
-            text: newMessage.trim(),
-            senderId: userInfo.userId,
-            date: Timestamp.now(),
-            isNew: true,
-          },
-        },
-        { merge: true }
-      );
-      await updateDoc(doc(firestore, "userChats", userInfo.userId), {
-        [chatId + ".lastMessage"]: {
-          text: newMessage,
-        },
-        [chatId + ".date"]: serverTimestamp(),
-      });
-      await updateDoc(doc(firestore, "userChats", collaboratorInfo.userId), {
-        [chatId + ".lastMessage"]: {
-          text: newMessage,
-        },
-        [chatId + ".date"]: serverTimestamp(),
-      });
+      await dispatch(addMessageToChat(Timestamp.now()));
+      await dispatch(updateChatInfo(userInfo.userId));
+      await dispatch(updateChatInfo(collaboratorInfo.userId));
       setNewMessage("");
       setisSending(false);
     } catch (error) {
@@ -125,7 +86,7 @@ function Chats() {
     }
   };
 
-  const handleBack = () => {
+  const handleHideChat = () => {
     setIsSelected(false);
   };
 
@@ -172,12 +133,12 @@ function Chats() {
       {isSelected && (
         <div className={styles["chat-panel"]}>
           <div className={styles["header"]}>
-            <button className={styles["back-btn"]} onClick={handleBack}>
+            <button className={styles["back-btn"]} onClick={handleHideChat}>
               <ArrowBack />
             </button>
             <div className={styles["avatar"]}>
               <img
-                src={collaboratorInfo.photoUrl}
+                src={collaboratorInfo.photoUrl || defaultAvatarMatch}
                 alt=""
                 className={styles["avatar-img"]}
               />
@@ -195,13 +156,16 @@ function Chats() {
               {messages &&
                 Object.values(messages)
                   ?.sort((a, b) => a.id - b.id)
-                  .map(({ id, senderId, text, date }) => (
+                  .map(({ id, senderId, text, date }, index) => (
                     <ChatMessage
                       key={id}
                       id={id}
                       type={senderId === userInfo.userId ? "out" : "in"}
                       text={text}
                       time={getFormatedDate(date.toDate())}
+                      isLast={index === Object.values(messages).length - 1}
+                      userId={userInfo.userId}
+                      collaboratorId={collaboratorInfo.userId}
                     />
                   ))}
             </div>

@@ -1,10 +1,26 @@
-import { Outlet, Link } from "react-router-dom";
+import { useEffect } from "react";
+
+import { Outlet, Link, useLocation } from "react-router-dom";
+import { useDispatch } from "react-redux";
+
+import { fetchUserInfoFromFirestore } from "src/redux/profileSlice";
+import { useAuth } from "src/contexts/AuthContext";
 
 import { sidebar } from "./constants";
 
 import styles from "./Admin.module.css";
 
 function Admin() {
+  const dispatch = useDispatch();
+  const location = useLocation();
+
+  const { currentUser } = useAuth();
+
+  useEffect(() => {
+    if (!currentUser.uid) return;
+    dispatch(fetchUserInfoFromFirestore(currentUser.uid));
+  }, [location, dispatch, currentUser]);
+
   return (
     <div className={styles["root"]}>
       <nav className={styles["sidebar"]}>

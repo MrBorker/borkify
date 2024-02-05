@@ -1,9 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
-import Select from "react-select";
 
-import { breeds } from "src/config";
-import { Button, FilterRange } from "src/components";
+import { Button, FilterRange, SelectInput } from "src/components";
 import { setFilter, fetchUsersListFromFirestore } from "src/redux/matchSlice";
 import { fetchUserInfoFromFirestore } from "src/redux/profileSlice";
 import { selectUserInfo } from "src/redux/selects";
@@ -11,19 +9,20 @@ import { selectUserInfo } from "src/redux/selects";
 import styles from "./Filter.module.css";
 
 function Filter({ setFilterMode }) {
+  const dispatch = useDispatch();
+
+  const userInfo = useSelector(selectUserInfo);
+
   const [distance, setDistance] = useState([5]);
   const [age, setAge] = useState([0, 20]);
   const [gender, setGender] = useState([]);
   const [breed, setBreed] = useState([]);
-  const dispatch = useDispatch();
-  const userInfo = useSelector(selectUserInfo);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    await dispatch(setFilter({ distance, gender, breed, age }));
-    await dispatch(fetchUserInfoFromFirestore(userInfo.userId));
-    // данные все равно старые
-    await dispatch(fetchUsersListFromFirestore(userInfo));
+    dispatch(setFilter({ distance, gender, breed, age }));
+    dispatch(fetchUserInfoFromFirestore(userInfo.userId));
+    dispatch(fetchUsersListFromFirestore());
     setFilterMode(false);
   };
 
@@ -37,7 +36,7 @@ function Filter({ setFilterMode }) {
     <div className={styles["root"]}>
       <h4 className={styles["header"]}>Let’s find new friends</h4>
       <form className={styles["form"]}>
-        <FilterRange
+        {/* <FilterRange
           values={distance}
           setValues={setDistance}
           colors={[
@@ -52,7 +51,7 @@ function Filter({ setFilterMode }) {
           min="0"
           step="0.1"
           unit="km"
-        />
+        /> */}
         <div className={styles["gender"]}>
           <button
             className={`
@@ -77,79 +76,7 @@ function Filter({ setFilterMode }) {
             Male
           </button>
         </div>
-        <Select
-          options={breeds}
-          isMulti="true"
-          onChange={(value) =>
-            value.map(({ value }) => setBreed([...breed, value]))
-          }
-          placeholder="All breeds"
-          styles={{
-            control: (baseStyles, state) => ({
-              ...baseStyles,
-              width: "100%",
-              border: `2px solid ${getComputedStyle(
-                document.documentElement
-              ).getPropertyValue("--color-rose-800")}`,
-              borderRadius: "20px",
-              padding: "4px 13px",
-            }),
-            placeholder: (baseStyles, state) => ({
-              ...baseStyles,
-              color: getComputedStyle(
-                document.documentElement
-              ).getPropertyValue("--color-rose-800"),
-              fontWeight: 600,
-              fontSize: "24px",
-            }),
-            input: (baseStyles, state) => ({
-              ...baseStyles,
-              color: getComputedStyle(
-                document.documentElement
-              ).getPropertyValue("--color-rose-800"),
-              fontWeight: 600,
-              fontSize: "24px",
-            }),
-            menu: (baseStyles, state) => ({
-              ...baseStyles,
-              color: getComputedStyle(
-                document.documentElement
-              ).getPropertyValue("--color-rose-800"),
-              fontWeight: 600,
-              fontSize: "24px",
-              border: `2px solid ${getComputedStyle(
-                document.documentElement
-              ).getPropertyValue("--color-rose-800")}`,
-              borderRadius: "20px",
-              boxShadow: "none",
-              padding: "13px",
-            }),
-            option: (baseStyles, state) => ({
-              ...baseStyles,
-              backgroundColor: "transparent",
-            }),
-            multiValue: (baseStyles, state) => ({
-              ...baseStyles,
-              backgroundColor: "transparent",
-            }),
-            multiValueLabel: (baseStyles, state) => ({
-              ...baseStyles,
-              color: getComputedStyle(
-                document.documentElement
-              ).getPropertyValue("--color-rose-800"),
-              fontWeight: 600,
-              fontSize: "24px",
-            }),
-            multiValueRemove: (baseStyles, state) => ({
-              ...baseStyles,
-              color: getComputedStyle(
-                document.documentElement
-              ).getPropertyValue("--color-rose-800"),
-              fontWeight: 600,
-              fontSize: "24px",
-            }),
-          }}
-        />
+        <SelectInput isForProfile={false} breed={breed} setBreed={setBreed} />
         <FilterRange
           values={age}
           setValues={setAge}
