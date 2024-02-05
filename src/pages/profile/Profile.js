@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
-import { breeds } from "src/config";
 import { Button, InputRow, Message, SelectInput } from "src/components";
 import { useAuth } from "src/contexts/AuthContext";
 import { storage } from "src/firebase";

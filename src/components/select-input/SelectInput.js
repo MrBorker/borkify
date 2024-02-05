@@ -2,8 +2,6 @@ import Select from "react-select";
 
 import { breeds } from "src/config";
 
-import styles from "./SelectInput.module.css";
-
 export const SelectInput = ({ isForProfile, breed, setBreed }) => {
   return isForProfile ? (
     <Select

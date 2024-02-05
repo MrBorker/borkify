@@ -358,7 +358,7 @@
 
 .cta-image-wrapper {
   display: flex;
-  align-items: end;
+  align-items: flex-end;
   justify-content: center;
   min-width: 226px;
 }
@@ -606,7 +606,7 @@
 
   .cta-image-wrapper {
     display: flex;
-    align-items: end;
+    align-items: flex-end;
     justify-content: center;
     min-width: 160px;
     min-height: 160px;
