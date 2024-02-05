@@ -1,19 +1,15 @@
-import "./App.css";
-import { Home, Matches, Chats, Profile, Map, Settings } from "./pages";
-import AuthProvider from "./contexts/AuthContext";
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Navigate,
-} from "react-router-dom";
-import { PrivateRoute } from "./PrivateRoute";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { store } from "./redux/store";
 import { Provider } from "react-redux";
 
+import { PrivateRoute } from "./PrivateRoute";
+import AuthProvider from "./contexts/AuthContext";
+import { Home, Matches, Chats, Profile, Map, Settings } from "./pages";
+import "./App.css";
+
 function App() {
   return (
-    <Router>
+    <BrowserRouter>
       <AuthProvider>
         <Provider store={store}>
           <Routes>
@@ -29,7 +25,7 @@ function App() {
           </Routes>
         </Provider>
       </AuthProvider>
-    </Router>
+    </BrowserRouter>
   );
 }
 

@@ -1,4 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
+
 import profileSlice from "./profileSlice";
 import chatSlice from "./chatSlice";
 import matchSlice from "./matchSlice";

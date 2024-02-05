@@ -1,24 +1,23 @@
-import styles from "./Profile.module.css";
-import { breeds } from "../../config";
-
-import { Button, InputRow, Message } from "../../components";
-
-import { useAuth } from "../../contexts/AuthContext";
 import { useState, useEffect } from "react";
-
-import { storage } from "../../firebase";
+import { useDispatch, useSelector } from "react-redux";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 
-import { useDispatch, useSelector } from "react-redux";
-import { selectUserInfo } from "../../redux/selects";
-import { addUserInfoToFirestore } from "../../redux/profileSlice";
+import { breeds } from "src/config";
+import { Button, InputRow, Message, SelectInput } from "src/components";
+import { useAuth } from "src/contexts/AuthContext";
+import { storage } from "src/firebase";
+import { selectUserInfo } from "src/redux/selects";
+import { addUserInfoToFirestore } from "src/redux/profileSlice";
+
+import { LoadAvatar } from "src/icons";
+import { avatarDefault } from "src/config";
+
+import styles from "./Profile.module.css";
 
 function Profile() {
-  const avatarDefault = "./assets/png/default-avatar.png";
+  const dispatch = useDispatch();
 
   const { currentUser } = useAuth();
-
-  const dispatch = useDispatch();
   const userInfo = useSelector(selectUserInfo);
 
   const [error, setError] = useState();
@@ -51,7 +50,8 @@ function Profile() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    setMessage("");
+    setError("");
+
     try {
       if (avatarToLoad) {
         // Load avatar to firebase storage
@@ -59,34 +59,47 @@ function Profile() {
           ref(storage, `avatars/${currentUser.uid}`),
           avatarToLoad
         );
+        // Get avatar link in a storage
+        const avatarUrl =
+          (await getDownloadURL(ref(storage, `avatars/${currentUser.uid}`))) ||
+          "";
+
+        dispatch(
+          addUserInfoToFirestore({
+            userId: currentUser.uid || "",
+            avatarUrl: avatarUrl || "",
+          })
+        );
       }
 
-      // Get avatar link in a storage
-      const avatarUrl =
-        (await getDownloadURL(ref(storage, `avatars/${currentUser.uid}`))) ||
-        "";
+      // Check if all fields are filled
+      if (!name || !location || !breed || !age || !gender || !about) {
+        setError("Please fill all the fields to appear in search");
+        return;
+      }
 
       // Add form data to database throw redux toolkit
-      dispatch(
+      await dispatch(
         addUserInfoToFirestore({
-          userId: currentUser.uid,
-          userName: name,
-          location: location,
-          breed: breed,
-          age: age,
-          gender: gender,
-          about: about,
-          avatarUrl: avatarUrl,
+          userId: currentUser.uid || "",
+          userName: name || "",
+          location: location || "",
+          breed: breed || "",
+          age: age || "",
+          gender: gender || "",
+          about: about || "",
         })
       );
 
-      setMessage("You data has been sucessfully saved");
+      setMessage("You data has been successfully saved");
+      setTimeout(() => {
+        setMessage("");
+      }, 2000);
+      console.log(breed);
     } catch (err) {
       console.log(err);
     }
   };
-
-  // переместить на общий уровень загрузку данных + поместить их в хранилище
 
   // Get data from database and fill the form with saved values
   useEffect(() => {
@@ -115,19 +128,7 @@ function Profile() {
             onChange={handleUpload}
           />
           <label className={styles["avatar-label"]} htmlFor="avatar-file">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width={21}
-              height={20}
-              fill="none"
-            >
-              <path
-                fill="#F85961"
-                fillRule="evenodd"
-                d="M15.521 2.872c.32-.324.75-.5 1.192-.488.442.012.862.21 1.167.55.305.341.47.797.46 1.267-.012.47-.198.917-.518 1.24L6.362 17.064l-2.953.413 1.21-3.6L15.52 2.874h.001Zm3.855-1.454A3.64 3.64 0 0 0 16.764.187a3.617 3.617 0 0 0-2.667 1.09L3.014 12.462a1.109 1.109 0 0 0-.262.427l-1.863 5.54a1.165 1.165 0 0 0 .17 1.062c.11.146.256.26.42.33.165.07.344.094.52.07l4.966-.694c.218-.03.42-.133.58-.293l11.704-11.87a4.092 4.092 0 0 0 1.157-2.78 4.115 4.115 0 0 0-1.03-2.836ZM12.212 17.7c-.274 0-.537.116-.731.322a1.136 1.136 0 0 0-.303.778c0 .292.109.572.303.778.194.206.457.322.731.322h6.209c.274 0 .537-.116.731-.322.194-.206.303-.486.303-.778 0-.291-.109-.571-.303-.778a1.005 1.005 0 0 0-.731-.322h-6.209Z"
-                clipRule="evenodd"
-              />
-            </svg>
+            <LoadAvatar />
           </label>
         </div>
         {error && <Message text={error} type="error" />}
@@ -150,24 +151,20 @@ function Profile() {
         />
         <fieldset className={styles["row"]}>
           <label htmlFor="breed">breed</label>
-          <input
+          {/* <input
             type="text"
             list="list"
             id="breed"
             value={breed || ""}
             onChange={(event) => setBreed(event.target.value)}
-          />
-          <datalist id="list">
-            {breeds.map((breed) => (
-              <option key={breed.id} value={breed.name}></option>
-            ))}
-          </datalist>
+          /> */}
+          <SelectInput isForProfile={true} breed={breed} setBreed={setBreed} />
         </fieldset>
         <InputRow
           htmlFor="age"
-          type="text"
+          type="number"
           id="age"
-          labelText="age"
+          labelText="age, years"
           value={age || ""}
           onChange={(event) => setAge(event.target.value)}
         />

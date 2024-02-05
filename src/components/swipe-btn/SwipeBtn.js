@@ -1,5 +1,4 @@
 import styles from "./SwipeBtn.module.css";
-import React from "react";
 
 function SwipeBtn({ type, onClick }) {
   return (

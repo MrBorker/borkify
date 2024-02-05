@@ -23,7 +23,7 @@ function FilterRange({ min, max, step, values, setValues, colors, unit }) {
               ...props.style,
               height: "36px",
               display: "flex",
-              width: "100%",
+              width: "90%",
             }}
           >
             <div
@@ -65,14 +65,14 @@ function FilterRange({ min, max, step, values, setValues, colors, unit }) {
               style={{
                 position: "absolute",
                 top: "-35px",
-                right: "-67px",
+                right: "-27px",
                 fontWeight: "600",
                 color: getComputedStyle(
                   document.documentElement
                 ).getPropertyValue("--color-rose-800"),
                 fontSize: "20px",
                 padding: "4px",
-                width: "100px",
+                width: "70px",
               }}
             >
               {values[index].toFixed(0)} {unit}

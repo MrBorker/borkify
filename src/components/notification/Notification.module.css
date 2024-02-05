@@ -1,0 +1,25 @@
+.root {
+  padding: 42px 59px 0 59px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-rose-100);
+  border: 3px solid var(--color-rose-200);
+  border-radius: 20px;
+}
+
+.info {
+  font-size: 28px;
+  font-weight: 500;
+  max-width: 438px;
+  margin-bottom: 25px;
+  text-align: center;
+}
+
+.image {
+  margin-top: 39px;
+  width: 100%;
+  max-width: 250px;
+  height: 100%;
+}
