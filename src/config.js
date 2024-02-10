@@ -695,6 +695,11 @@ export const breeds = [
     label: "Rottweiler",
   },
   {
+    id: 270,
+    value: "Rough Collie",
+    label: "Rough Collie",
+  },
+  {
     id: 211,
     value: "Russian Toy",
     label: "Russian Toy",
