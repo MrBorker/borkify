@@ -14,6 +14,7 @@ export const fetchUsersListFromFirestore = createAsyncThunk(
   "match/fetchUsersListFromFirestore",
   async (_, { getState }) => {
     const { userInfo } = getState().profile;
+    console.log(userInfo);
     let users = [];
 
     const usersCollection = await getDocs(

@@ -21,7 +21,7 @@ function Filter({ setFilterMode }) {
   const handleSubmit = async (event) => {
     event.preventDefault();
     dispatch(setFilter({ distance, gender, breed, age }));
-    dispatch(fetchUserInfoFromFirestore(userInfo.userId));
+    await dispatch(fetchUserInfoFromFirestore(userInfo.userId));
     dispatch(fetchUsersListFromFirestore());
     setFilterMode(false);
   };
