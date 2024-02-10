@@ -107,6 +107,10 @@
     height: 400px;
   }
 
+  .info {
+    min-width: 100%;
+  }
+
   .header {
     color: var(--color-rose-200);
     font-size: 38px;

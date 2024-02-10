@@ -2,6 +2,7 @@
   width: 100%;
   max-width: 1284px;
   min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -31,7 +32,7 @@
   position: absolute;
   transform: rotate(-60deg);
   bottom: 10%;
-  right: 0;
+  right: 25px;
   background: url("/public/assets/admin/paw-l.png");
   background-size: contain;
   background-repeat: no-repeat;
@@ -39,10 +40,8 @@
 }
 
 .sidebar {
-}
-
-.list {
-  width: 250px;
+  max-width: 250px;
+  width: 100%;
 }
 
 .link {
@@ -53,7 +52,8 @@
 }
 
 .icon {
-  width: 60px;
+  max-width: 60px;
+  width: 100%;
   display: flex;
   justify-content: center;
 }
@@ -105,11 +105,19 @@
     align-items: flex-start;
   }
 
+  .root::after {
+    width: 200px;
+    height: 200px;
+    top: 10%;
+    left: 0;
+  }
+
   .text {
     display: none;
   }
 
   .sidebar {
+    max-width: 100%;
     width: 100%;
     position: fixed;
     bottom: 0;
@@ -132,9 +140,7 @@
   }
 
   .icon {
-    width: 60px;
-    display: flex;
-    justify-content: center;
+    max-width: 40px;
   }
 
   .item {
@@ -154,5 +160,12 @@
     color: var(--color-gray-400);
     font-weight: 600;
     font-size: 18px;
+  }
+
+  .content::before {
+    width: 180px;
+    height: 180px;
+    right: 25px;
+    bottom: 30%;
   }
 }

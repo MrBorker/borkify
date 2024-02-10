@@ -150,13 +150,6 @@ function Profile() {
         />
         <fieldset className={styles["row"]}>
           <label htmlFor="breed">breed</label>
-          {/* <input
-            type="text"
-            list="list"
-            id="breed"
-            value={breed || ""}
-            onChange={(event) => setBreed(event.target.value)}
-          /> */}
           <SelectInput isForProfile={true} breed={breed} setBreed={setBreed} />
         </fieldset>
         <InputRow

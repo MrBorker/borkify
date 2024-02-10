@@ -69,7 +69,7 @@ function Home() {
             </button>
           </nav>
           <a href="#cta" className={styles["header-btn"]}>
-            app
+            sign in
           </a>
           <button
             className={styles["header-burger-btn"]}

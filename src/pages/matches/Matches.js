@@ -139,12 +139,12 @@ function Matches() {
                     {userList[0]?.age} years
                   </span>
                 </div>
-                <div className={styles["bio-raw"]}>
+                {/* <div className={styles["bio-raw"]}>
                   <div className={styles["bio-icon"]}>
                     <Size />
                   </div>
                   <span className={styles["title"]}>Large</span>
-                </div>
+                </div> */}
               </div>
               <p className={styles["about"]}>{userList[0]?.about}</p>
             </div>

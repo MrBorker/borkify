@@ -21,6 +21,7 @@
   justify-content: center;
   align-items: center;
   margin-right: 20px;
+  flex-shrink: 0;
 }
 
 .avatar-img {
@@ -48,6 +49,7 @@
   color: var(--color-gray-400);
   font-weight: 600;
   font-size: 16px;
+  text-align: start;
 }
 
 .message {

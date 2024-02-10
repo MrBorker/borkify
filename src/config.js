@@ -560,6 +560,11 @@ export const breeds = [
     label: "Maltese",
   },
   {
+    id: 162,
+    value: "Maltipoo",
+    label: "Maltipoo",
+  },
+  {
     id: 165,
     value: "Miniature American Shepherd",
     label: "Miniature American Shepherd",

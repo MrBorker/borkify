@@ -3,8 +3,8 @@
   justify-content: space-between;
   gap: 20px;
   width: 100%;
-  height: 100%;
-  min-height: 800px;
+  min-height: calc(100vh - 80px);
+  min-height: calc(100dvh - 80px);
   max-width: 1200px;
   margin: 0 10px;
 }
@@ -23,6 +23,8 @@
 .list {
   width: 100%;
   margin-top: 60px;
+  max-height: 600px;
+  overflow-y: scroll;
 }
 
 .search {
@@ -49,7 +51,6 @@
   width: 100%;
   display: flex;
   flex-direction: column;
-  /* display: none; */
 }
 
 .header {
@@ -112,11 +113,13 @@
   overflow-y: auto;
 }
 
-.chat::-webkit-scrollbar {
+.chat::-webkit-scrollbar,
+.list::-webkit-scrollbar {
   width: 15px;
 }
 
-.chat::-webkit-scrollbar-track {
+.chat::-webkit-scrollbar-track,
+.list::-webkit-scrollbar-track {
   background: transparent;
 }
 
@@ -153,17 +156,25 @@
   .root {
     margin: 0 10px;
     max-width: 600px;
+    min-height: 0px;
+  }
+
+  .search-container {
+    display: flex;
+    align-items: center;
+    min-height: 60px;
   }
 
   .chat-panel {
     width: 100%;
     min-height: 100vh;
+    min-height: 0px;
     position: absolute;
     top: 0;
     left: 0;
     background-color: var(--color-white);
     z-index: 1;
-    padding: 20px 10px;
+    padding: 0px 10px;
   }
 
   .preview-panel {
@@ -172,7 +183,10 @@
 
   .list {
     width: 100%;
-    margin-top: 30px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    max-height: calc(100vh - 150px);
+    max-height: calc(100dvh - 150px);
   }
 
   .selected {
@@ -180,8 +194,29 @@
     display: flex;
     flex-direction: column;
     flex-grow: 1;
-    margin-top: 20px;
-    margin-bottom: 70px;
+    margin-top: 10px;
+    margin-bottom: 50px;
+    overflow-y: scroll;
+    max-height: calc(100vh - 90px);
+    max-height: calc(100dvh - 90px);
+  }
+
+  .chat {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    max-height: calc(100dvh - 70px - 70px - 80px);
+    overflow-y: auto;
+  }
+
+  .avatar {
+    width: 60px;
+    height: 60px;
+  }
+
+  .avatar-img {
+    width: 50px;
+    height: 50px;
   }
 
   .new-message-form {
