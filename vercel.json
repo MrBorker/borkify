@@ -1,6 +1,6 @@
 {
   "routes": [
-    { "src": "/home", "dest": "/" },
+    { "src": "/home", "dest": "src/pages/home/Home.js" },
     { "src": "/admin/matches", "dest": "/" },
     { "src": "/admin/chats", "dest": "/" },
     { "src": "/admin/settings", "dest": "/" }
