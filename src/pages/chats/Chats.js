@@ -9,7 +9,7 @@ import {
   updateChatInfo,
 } from "src/redux/chatSlice";
 import { getFormatedDate } from "src/helpers/getFormatedDate";
-import { ChatPreview, ChatMessage } from "src/components";
+import { ChatPreview, ChatMessage, Notification } from "src/components";
 import { firestore } from "src/firebase";
 import {
   selectUserInfo,
@@ -104,6 +104,9 @@ function Chats() {
           />
         </div>
 
+        {!chats && (
+          <Notification text="You don`t have any chat yet. Start from find matches." />
+        )}
         <div className={styles["list"]}>
           {chats &&
             Object.values(chats)

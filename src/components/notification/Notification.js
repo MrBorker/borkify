@@ -2,7 +2,7 @@ import { Button } from "src/components";
 
 import styles from "./Notification.module.css";
 
-function Notification({ text, onClick, withBtn, src }) {
+function Notification({ text, onClick, withBtn }) {
   return (
     <div className={styles["root"]}>
       <p className={styles["info"]}>{text}</p>
