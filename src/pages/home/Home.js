@@ -218,7 +218,7 @@ function Home() {
         <div className={styles["footer-container"]}>
           <span className={styles["footer-title"]}>
             Portfolio project <br />
-            Depeloped by Anastasia Kondratiuk @mr-borker
+            Depeloped by Anastasia Kondratyuk @mr-borker
           </span>
           <div className={styles["footer-links"]}>
             <a
